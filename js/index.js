@@ -9,19 +9,19 @@ var app = {
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
         document.addEventListener('online', this.onOnline, false);
-        document.addEventListener('online', this.onOffline, false);
+        document.addEventListener('offline', this.onOffline, false);
     },
     
     onOnline: function()
     {
-        
+        alert('online');
     },
     onOffline: function()
     {
-        
+        alert('offline');
     },
     onDeviceReady: function() 
     {
-      
+        alert('ready');
     },
 };
