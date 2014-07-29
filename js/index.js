@@ -1,7 +1,7 @@
 var app =
 {
     state_online: null,
-    remote: 'http://192.168.1.123/zppc-server/api/json/read/app',
+    remote: 'http://test.visietest.nl/zppc/api/json/read/app',
     pagadata: null,
     initialize: function()
     {
