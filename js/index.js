@@ -66,6 +66,11 @@ var app =
             return;
         }
         
+        if(app.cacheFile)
+        {
+            console.log('Went online but already got a cache during this session! Close the app to refresh the data.'); //@todo: or maybe check each x minutes.
+        }
+        
         app.checkIfFileExists(app.folder + '/cache.json');
         if(!app.cacheFile)
         {
