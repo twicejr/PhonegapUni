@@ -120,6 +120,9 @@ var app =
     },
     utilizeFile: function(file_url)
     {
+=======
+        //@todo: sync data, but only when new! and call app.utilizeData();
+>>>>>>> afc8d4e00a2adc5f30c247bb4e1fb60f33dc90d1
         $.ajax
         ({
             accepts: "application/json",
@@ -127,6 +130,7 @@ var app =
             {
                 x.setRequestHeader("Content-Type","application/json");
             },
+<<<<<<< HEAD
             url: file_url, //@todo: add language here , or will the auto detection on the framework side suffice?
             dataType: 'json',
             type: 'GET',
@@ -134,6 +138,17 @@ var app =
                 console.log(xhr);
                 console.log(error);
                 console.log(xhr);                  
+=======
+            url: app.remote, //@todo: add language here :)
+            dataType: 'json',
+            type: 'GET',
+            //@todo: error handling etc... make it beautiful
+            error: function(xhr,error,code) {
+                // SOMETHING WRONG WITH YOUR CALL.
+                  alert(error); 
+                  alert(xhr); 
+                  alert(code); 
+>>>>>>> afc8d4e00a2adc5f30c247bb4e1fb60f33dc90d1
             },
             success: function(data) 
             {
@@ -151,5 +166,11 @@ var app =
         }
         $('body').html(data.pagedata);
         $.mobile.changePage('#home'); //@todo: the last remembered page :)
+<<<<<<< HEAD
     }
 };
+=======
+        
+    }
+};
+>>>>>>> afc8d4e00a2adc5f30c247bb4e1fb60f33dc90d1
