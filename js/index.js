@@ -7,7 +7,6 @@ var app =
     api_pagesum: 'api/json/read/pagesum',
     folder: 'zppc',
     cacheFile: null,
-    pagadata: null,
     initialize: function()
     {
         console.log('Binding events...');
@@ -93,12 +92,12 @@ var app =
             {
                 app.cacheFile = fileEntry.toURL();
                 console.log('.. we already have data at ' + app.cacheFile);
+                //@todo: but fetch if it is old.
                 app.utilizeFile(app.cacheFile);
-                
             }, function()
             {
                 app.cacheFile = false;
-                console.log('.. no data. Fetching data now.'); //@todo: check for latest
+                console.log('.. no data. Fetching data now.');
                 app.update(app.remote + app.api_page, 'cache.json');
             });
         }, function(e)
@@ -109,8 +108,6 @@ var app =
     update: function(remote_file, local_file)
     {
         var returnvalue;
-        //@todo: check if exists, check date. Re-fetch every day, if there updates only. 
-        //@todo: get /set version framework / local
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) 
         {
             fileSystem.root.getDirectory(app.folder, {create: true, exclusive: false}, function(fileEntry) 
@@ -152,7 +149,6 @@ var app =
             },
             success: function(data) 
             {
-                //Store json.
                 app.utilizeData(data.data);
             }
         });
