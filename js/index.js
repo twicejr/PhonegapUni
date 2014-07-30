@@ -21,6 +21,7 @@ var app =
         // org.apache.cordova.network-information: online offline
         document.addEventListener('online', app.onOnline, false);
         document.addEventListener('onlineswitch', app.whenOnline, false);
+        document.addEventListener("resume", app.whenOnline, false);
         document.addEventListener('offline', app.onOffline, false);
         document.addEventListener('offlineswitch', app.wentOffline, false);
         // org.apache.cordova.battery-status: batterycritical    batterylow    batterystatus
