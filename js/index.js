@@ -17,19 +17,20 @@ var app =
     {
         // Possible events: deviceready    pause    resume    backbutton    menubutton    searchbutton    startcallbutton    endcallbutton    volumedownbutton    volumeupbutton
         document.addEventListener('deviceready', app.initialized, false);
-
-        // org.apache.cordova.network-information: online offline
-        document.addEventListener('online', app.onOnline, false);
-        document.addEventListener('onlineswitch', app.whenOnline, false);
-        document.addEventListener('offline', app.onOffline, false);
-        document.addEventListener('offlineswitch', app.wentOffline, false);
-        // org.apache.cordova.battery-status: batterycritical    batterylow    batterystatus
     },
     initialized: function()
     {
         console.log('Device ready!');
         app.ready = true;        
         $('.app').removeClass('initializing');
+        
+        // org.apache.cordova.network-information: online offline
+        document.addEventListener('online', app.onOnline, false);
+        document.addEventListener('onlineswitch', app.whenOnline, false);
+        document.addEventListener('offline', app.onOffline, false);
+        document.addEventListener('offlineswitch', app.wentOffline, false);
+        // org.apache.cordova.battery-status: batterycritical    batterylow    batterystatus
+        
         app.whenOnline();
     },
     onOnline: function()
@@ -47,7 +48,7 @@ var app =
     },
     onOffline: function()
     {
-        console.log('Device changed connection to offline./');
+        console.log('Device changed connection to offline.');
         if (app.state_online === false)
         {
             console.log('..but we already were offline.');
