@@ -66,7 +66,6 @@ var app =
             return;
         }
         
-        console.log('Checking if we already have the data..'); //@todo: check for latest
         app.checkIfFileExists(app.folder + '/cache.json');
         if(!app.cacheFile)
         {
@@ -111,14 +110,21 @@ var app =
     },
     checkIfFileExists: function(path)
     {
+        console.log('Checking if we already have a cachefile..');
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
         {
-            fileSystem.root.getFile(path, { create: false }, function(fileEntry){app.cacheFile = fileEntry.toURL();},  function(){
+            fileSystem.root.getFile(path, { create: false }, function(fileEntry)
+            {
+                app.cacheFile = fileEntry.toURL(); 
+                console.log('..file exists!');
+            }, function()
+            {
                 app.cacheFile = false;
+                console.log('..file not exists.');
             });
         }, function(e)
         {
-           console.log('Error checking');
+           console.log('..error in checking if the file exists!' + e);
         });
     },
     utilizeFile: function(file_url)
