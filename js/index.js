@@ -5,10 +5,11 @@ var app =
     api_page: 'api/json/read/pages',
     api_pagesum: 'api/json/read/pagesum',
     folder: 'zppc',
-    cache_available: null,
+    cacheFile: null,
     pagadata: null,
     initialize: function()
     {
+        console.log('Binding events...');
         app.bindEvents();
     },
     bindEvents: function()
@@ -18,20 +19,21 @@ var app =
 
         // org.apache.cordova.network-information: online offline
         document.addEventListener('online', app.onOnline, false);
-        document.addEventListener('onlineswitch', app.sync, false);
+        document.addEventListener('onlineswitch', app.wentOnline, false);
         document.addEventListener('offline', app.onOffline, false);
         document.addEventListener('offlineswitch', app.wentOffline, false);
-
         // org.apache.cordova.battery-status: batterycritical    batterylow    batterystatus
     },
     initialized: function()
     {
-        // Do stuff.
+        console.log('Device ready!');
     },
     onOnline: function()
     {
+        console.log('Device changed connection to online..');
         if (app.state_online === true)
         {
+            console.log('..but we already were online.');
             return;
         }
         app.state_online = true;
@@ -41,8 +43,10 @@ var app =
     },
     onOffline: function()
     {
+        console.log('Device changed connection to offline./');
         if (app.state_online === false)
         {
+            console.log('..but we already were offline.');
             return;
         }
         app.state_online = false;
@@ -52,23 +56,27 @@ var app =
     },
     wentOffline: function()
     {
-        alert('Offline. When we have a certain version to use, we are cool. Notify the user about it.');
+        
     },
-    sync: function()
+    wentOnline: function()
     {
         if(!app.state_online)
         {
+            console.log('Not online (anymore). Cannot sync.');
             return;
         }
         
+        console.log('Checking if we already have the data..'); //@todo: check for latest
         app.checkIfFileExists(app.folder + '/cache.json');
-        if(!app.cache_available)
+        if(!app.cacheFile)
         {
+            console.log('.. no data. Fetching data now.'); //@todo: check for latest
             app.update(app.remote + app.api_page, 'cache.json');
         }
         else
         {
-            console.log('You are golden');
+            console.log('.. we already have data at ' + app.cacheFile);
+            app.utilizeFile(app.cacheFile);
         }
     },
     update: function(remote_file, local_file)
@@ -104,51 +112,27 @@ var app =
     {
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
         {
-            fileSystem.root.getFile(path, { create: false }, app.fileExists, app.fileDoesNotExist);
-        }, app.fsFail);
-    },
-    fsFail: function(e)
-    {
-       console.log(e);
-    },
-    fileExists: function(fileEntry)
-    {
-        app.cache_available = true;
-    },
-    fileDoesNotExist: function(){
-        app.cache_available = false;
+            fileSystem.root.getFile(path, { create: false }, function(fileEntry){app.cacheFile = fileEntry.toURL();},  function(){
+                app.cacheFile = false;
+            });
+        }, function(e)
+        {
+           console.log('Error checking');
+        });
     },
     utilizeFile: function(file_url)
     {
-=======
-        //@todo: sync data, but only when new! and call app.utilizeData();
->>>>>>> afc8d4e00a2adc5f30c247bb4e1fb60f33dc90d1
+        console.log('Utilizing file: ' + file_uri);
         $.ajax
         ({
-            accepts: "application/json",
-            beforeSend: function(x)
+            url: file_url,
+            dataType: 'json',
+            type: 'GET',
+            error: function(xhr,error,code) 
             {
-                x.setRequestHeader("Content-Type","application/json");
-            },
-<<<<<<< HEAD
-            url: file_url, //@todo: add language here , or will the auto detection on the framework side suffice?
-            dataType: 'json',
-            type: 'GET',
-            error: function(xhr,error,code) {
-                console.log(xhr);
-                console.log(error);
-                console.log(xhr);                  
-=======
-            url: app.remote, //@todo: add language here :)
-            dataType: 'json',
-            type: 'GET',
-            //@todo: error handling etc... make it beautiful
-            error: function(xhr,error,code) {
-                // SOMETHING WRONG WITH YOUR CALL.
                   alert(error); 
                   alert(xhr); 
                   alert(code); 
->>>>>>> afc8d4e00a2adc5f30c247bb4e1fb60f33dc90d1
             },
             success: function(data) 
             {
@@ -166,11 +150,5 @@ var app =
         }
         $('body').html(data.pagedata);
         $.mobile.changePage('#home'); //@todo: the last remembered page :)
-<<<<<<< HEAD
     }
 };
-=======
-        
-    }
-};
->>>>>>> afc8d4e00a2adc5f30c247bb4e1fb60f33dc90d1
