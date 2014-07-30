@@ -108,7 +108,7 @@ var app =
                 
                 app.download(app.cacheFile, function(data)
                 {
-                     app.updateWhenNewVersion(app.remote + app.api_pagesum, 'cache.json', data.sum);
+                     app.updateWhenNewVersion(app.remote + app.api_pagesum, data.sum);
                 });
             }, function()
             {
@@ -121,7 +121,7 @@ var app =
            console.log('..error in checking if the file exists!' + e);
         });
     },
-    updateWhenNewVersion: function(remote_file, local_file, checksum)
+    updateWhenNewVersion: function(remote_file, checksum)
     {
         app.download(remote_file, function(data)
         {
