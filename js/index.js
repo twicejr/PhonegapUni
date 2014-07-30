@@ -78,6 +78,7 @@ var app =
     },
     download: function(file_url, successFunction)
     {
+        console.log('Download file ' + file_url);
         $.ajax
         ({
             url: file_url,
@@ -93,7 +94,6 @@ var app =
     updateIfRequired: function(path)
     {
         console.log('Checking if we already have a cachefile..');
-        
         if(app.cacheFile)
         {
             //@todo:might want to return now, and periodically check only...
@@ -108,7 +108,7 @@ var app =
                 
                 app.download(app.cacheFile, function(data)
                 {
-                     app.updateWhenNewVersion(app.remote + app.api_pagesum, data.sum);
+                    app.updateWhenNewVersion(app.remote + app.api_pagesum, data.data.sum); //subarr
                 });
             }, function()
             {
@@ -169,7 +169,6 @@ var app =
     },
     utilizeFile: function(file_url)
     {
-        console.log('Utilizing datafile: ' + file_url);
         app.download(file_url, function(data)
         {
              app.utilizeData(data.data);
