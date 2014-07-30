@@ -16,12 +16,6 @@ var app =
     {
         // Possible events: deviceready    pause    resume    backbutton    menubutton    searchbutton    startcallbutton    endcallbutton    volumedownbutton    volumeupbutton
         document.addEventListener('deviceready', app.initialized, false);
-    },
-    initialized: function()
-    {
-        console.log('Device ready!');
-        app.ready = true;        
-        $('.app').removeClass('initializing');
         
         // org.apache.cordova.network-information: online offline
         document.addEventListener('online', app.onOnline, false);
@@ -29,7 +23,12 @@ var app =
         document.addEventListener('offline', app.onOffline, false);
         document.addEventListener('offlineswitch', app.wentOffline, false);
         // org.apache.cordova.battery-status: batterycritical    batterylow    batterystatus
-        
+    },
+    initialized: function()
+    {
+        console.log('Device ready!');
+        app.ready = true;        
+        $('.app').removeClass('initializing');
         app.whenOnline();
     },
     onOnline: function()
