@@ -69,12 +69,6 @@ var app =
             return;
         }
         
-        if(!app.state_online)
-        {
-            console.log('Not online (anymore). Cannot sync.');
-            return;
-        }
-        
         app.updateIfRequired(app.folder + '/cache.json');
     },
     download: function(file_url, successFunction)
@@ -115,6 +109,13 @@ var app =
             {
                 app.cacheFile = false;
                 console.log('.. no data. Fetching data now.');
+        
+                if(!app.state_online)
+                {
+                    console.log('Not online (anymore). Cannot sync.');
+                    return;
+                }
+
                 app.update(app.remote + app.api_page, 'cache.json');
             });
         }, function(e)
