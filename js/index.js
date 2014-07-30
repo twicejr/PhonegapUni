@@ -1,7 +1,11 @@
 var app =
 {
     state_online: null,
-    remote: 'http://192.168.1.123/zppc-server/api/json/read/app',
+    remote: 'http://192.168.1.123/zppc-server/',
+    api_page: 'api/json/read/pages',
+    api_pagesum: 'api/json/read/pagesum',
+    folder: 'zppc',
+    cache_available: null,
     pagadata: null,
     initialize: function()
     {
@@ -57,7 +61,65 @@ var app =
             return;
         }
         
-        //@todo: sync data, but only when new! and call app.utilizeData();
+        app.checkIfFileExists(app.folder + '/cache.json');
+        if(!app.cache_available)
+        {
+            app.update(app.remote + app.api_page, 'cache.json');
+        }
+        else
+        {
+            console.log('You are golden');
+        }
+    },
+    update: function(remote_file, local_file)
+    {
+        var returnvalue;
+        //@todo: check if exists, check date. Re-fetch every day, if there updates only. 
+        //@todo: get /set version framework / local
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) 
+        {
+            fileSystem.root.getDirectory(app.folder, {create: true, exclusive: false}, function(fileEntry) 
+            {
+                var local_path = fileEntry.toURL() + '/';
+                var fileTransfer = new FileTransfer();
+                fileTransfer.download
+                (
+                    remote_file,
+                    local_path + local_file,
+                    function(theFile) 
+                    {
+                        app.utilizeFile(theFile.toURL());
+                    },
+                    function(error)
+                    {
+                        console.log(error);
+                        return false;
+                    }
+                );
+            });
+        });
+        return returnvalue;
+    },
+    checkIfFileExists: function(path)
+    {
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
+        {
+            fileSystem.root.getFile(path, { create: false }, app.fileExists, app.fileDoesNotExist);
+        }, app.fsFail);
+    },
+    fsFail: function(e)
+    {
+       console.log(e);
+    },
+    fileExists: function(fileEntry)
+    {
+        app.cache_available = true;
+    },
+    fileDoesNotExist: function(){
+        app.cache_available = false;
+    },
+    utilizeFile: function(file_url)
+    {
         $.ajax
         ({
             accepts: "application/json",
@@ -65,15 +127,13 @@ var app =
             {
                 x.setRequestHeader("Content-Type","application/json");
             },
-            url: app.remote, //@todo: add language here :)
+            url: file_url, //@todo: add language here , or will the auto detection on the framework side suffice?
             dataType: 'json',
             type: 'GET',
-            //@todo: error handling etc... make it beautiful
             error: function(xhr,error,code) {
-                // SOMETHING WRONG WITH YOUR CALL.
-                  alert(error); 
-                  alert(xhr); 
-                  alert(code); 
+                console.log(xhr);
+                console.log(error);
+                console.log(xhr);                  
             },
             success: function(data) 
             {
@@ -91,6 +151,5 @@ var app =
         }
         $('body').html(data.pagedata);
         $.mobile.changePage('#home'); //@todo: the last remembered page :)
-        
     }
 };
