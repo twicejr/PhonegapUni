@@ -29,7 +29,6 @@ var app =
     {
         console.log('Device ready!');
         app.ready = true;        
-        $('.app').removeClass('initializing');
         app.whenOnline();
     },
     onOnline: function()
@@ -109,7 +108,7 @@ var app =
                 
                 app.download(app.cacheFile, function(data)
                 {
-                     app.updateWhenNewVersion(app.remote + app.api_page, 'cache.json', data.sum);
+                     app.updateWhenNewVersion(app.remote + app.api_pagesum, 'cache.json', data.sum);
                 });
             }, function()
             {
@@ -133,13 +132,15 @@ var app =
             }
             else
             {
-                console.log('.. data is old. Fetching data now.');
+                console.log('.. data is old (' + data.data + ' | ' + checksum + '). Fetching data now.');
                 app.update(app.remote + app.api_page, 'cache.json');
             }
         });
     },
     update: function(remote_file, local_file)
     {
+        $('.app').addClass('initializing'); //could be that it is already added, or that we are actually RE-initializing.
+        
         var returnvalue;
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) 
         {
@@ -192,6 +193,8 @@ var app =
         {
             activePage = '#home';
         }
+        
+        $('.app').removeClass('initializing');
         $.mobile.changePage(activePage);
     }
 };
