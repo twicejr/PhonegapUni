@@ -9,10 +9,18 @@
         
         <link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.3.css" />
         
+        <!-- inline style for fastest parsing -->
+        <style type="text/css">
+            /*todo: add spinner.*/
+            .app.initializing
+            {
+                background: url('img/logo.png') center center no-repeat;
+            }
+        </style>
         <title>ZPPC</title>
     </head>
     <body>
-        <div class="app"></div> <!-- @todo: it would be wise to add a default page .... no connection would be very ugly otherwise. -->
+        <div class="app initializing"></div> <!-- @todo: it would be wise to add a default page .... no connection would be very ugly otherwise. -->
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/jquery.1.11.1.min.js"></script>
         <script type="text/javascript" src="js/jquery.mobile-1.4.3.js"></script>

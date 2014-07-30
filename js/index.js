@@ -27,6 +27,7 @@ var app =
     initialized: function()
     {
         console.log('Device ready!');
+        $('.app').removeClass('initializing');
     },
     onOnline: function()
     {
