@@ -127,7 +127,7 @@ var app =
     {
         if(!app.state_online)
         {
-            app.useCurrentdata();
+            app.useCurrentData();
             return;
         }
         app.download(remote_file, function(data)
