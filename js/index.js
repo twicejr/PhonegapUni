@@ -60,15 +60,16 @@ var app =
     },
     wentOnline: function()
     {
+        if(app.cacheFile)
+        {
+            console.log('Went online but already got a cache during this session! Close the app to refresh the data.'); //@todo: or maybe check each x minutes.
+            return;
+        }
+        
         if(!app.state_online)
         {
             console.log('Not online (anymore). Cannot sync.');
             return;
-        }
-        
-        if(app.cacheFile)
-        {
-            console.log('Went online but already got a cache during this session! Close the app to refresh the data.'); //@todo: or maybe check each x minutes.
         }
         
         app.checkIfFileExists(app.folder + '/cache.json');
