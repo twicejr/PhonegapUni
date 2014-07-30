@@ -165,6 +165,16 @@ var app =
             $('head').append('<style type="text/css" id="style_remote">' + data.css + '</style>');
         }
         $('body').html(data.pagedata);
-        $.mobile.changePage('#home'); //@todo: the last remembered page :)
+        
+        var activePage = $.mobile.activePage.attr("id");
+        if(activePage)
+        {
+            activePage = '#' + activePage;
+        }
+        else
+        {
+            activePage = '#home';
+        }
+        $.mobile.changePage(activePage);
     }
 };
