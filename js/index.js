@@ -105,17 +105,16 @@ var app =
                 {
                     app.updateWhenNewVersion(app.remote + app.api_pagesum, data.data.sum); //subarr
                 });
-            }, function()
+            },
+            function()
             {
                 app.cacheFile = false;
                 console.log('.. no data. Fetching data now.');
-        
                 if(!app.state_online)
                 {
                     console.log('Not online (anymore). Cannot sync.');
                     return;
                 }
-
                 app.update(app.remote + app.api_page, 'cache.json');
             });
         }, function(e)
@@ -125,21 +124,16 @@ var app =
     },
     updateWhenNewVersion: function(remote_file, checksum)
     {
+        if(!app.state_online)
+        {
+            app.useCurrentdata();
+            return;
+        }
         app.download(remote_file, function(data)
         {
             if(checksum == data.data)
             {
-                console.log('..we are up to date!');
-                
-                if($('.app').hasClass('initializing'))
-                {
-                    console.log('Using the data we have..');
-                    app.utilizeFile(app.cacheFile);
-                }
-                else
-                {
-                    console.log('App is already loaded with latest data.');
-                }
+                app.useCurrentData();
             }
             else
             {
@@ -147,6 +141,19 @@ var app =
                 app.update(app.remote + app.api_page, 'cache.json');
             }
         });
+    },
+    useCurrentData: function()
+    {
+        console.log('..we are up to date!');
+        if($('.app').hasClass('initializing'))
+        {
+            console.log('Using the data we have..');
+            app.utilizeFile(app.cacheFile);
+        }
+        else
+        {
+            console.log('App is already loaded with latest data.');
+        }  
     },
     update: function(remote_file, local_file)
     {
