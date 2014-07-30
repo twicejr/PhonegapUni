@@ -17,6 +17,7 @@ var app =
         // Possible events: deviceready    pause    resume    backbutton    menubutton    searchbutton    startcallbutton    endcallbutton    volumedownbutton    volumeupbutton
         document.addEventListener('deviceready', app.initialized, false);
         
+        //@see www/config.xml also!!
         // org.apache.cordova.network-information: online offline
         document.addEventListener('online', app.onOnline, false);
         document.addEventListener('onlineswitch', app.whenOnline, false);
@@ -68,12 +69,6 @@ var app =
             return;
         }
         
-        if(app.cacheFile)
-        {
-            console.log('Went online but we have data already. Stopping refresh.'); //@todo: or maybe check each x minutes.
-            return;
-        }
-        
         if(!app.state_online)
         {
             console.log('Not online (anymore). Cannot sync.');
@@ -82,17 +77,40 @@ var app =
         
         app.updateIfRequired(app.folder + '/cache.json');
     },
+    download: function(file_url, successFunction)
+    {
+        $.ajax
+        ({
+            url: file_url,
+            dataType: 'json',
+            type: 'GET',
+            error: function(xhr,error,code) 
+            {
+                console.log('Error ' + error + xhr + code);
+            },
+            success: successFunction
+        });  
+    },
     updateIfRequired: function(path)
     {
         console.log('Checking if we already have a cachefile..');
+        
+        if(app.cacheFile)
+        {
+            //@todo:might want to return now, and periodically check only...
+        }
+        
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
         {
             fileSystem.root.getFile(path, { create: false }, function(fileEntry)
             {
                 app.cacheFile = fileEntry.toURL();
-                console.log('.. we already have data at ' + app.cacheFile);
-                //@todo: but fetch if it is old.
-                app.utilizeFile(app.cacheFile);
+                console.log('.. we already have data at ' + app.cacheFile + ' . Checking if it is up to date before using it..');
+                
+                app.download(app.cacheFile, function(data)
+                {
+                     app.updateWhenNewVersion(app.remote + app.api_page, 'cache.json', data.sum);
+                });
             }, function()
             {
                 app.cacheFile = false;
@@ -102,6 +120,22 @@ var app =
         }, function(e)
         {
            console.log('..error in checking if the file exists!' + e);
+        });
+    },
+    updateWhenNewVersion: function(remote_file, local_file, checksum)
+    {
+        app.download(remote_file, function(data)
+        {
+            if(checksum == data.data)
+            {
+                console.log('..we are up to date!');
+                app.utilizeFile(app.cacheFile);
+            }
+            else
+            {
+                console.log('.. data is old. Fetching data now.');
+                app.update(app.remote + app.api_page, 'cache.json');
+            }
         });
     },
     update: function(remote_file, local_file)
@@ -135,21 +169,9 @@ var app =
     utilizeFile: function(file_url)
     {
         console.log('Utilizing datafile: ' + file_url);
-        $.ajax
-        ({
-            url: file_url,
-            dataType: 'json',
-            type: 'GET',
-            error: function(xhr,error,code) 
-            {
-                  alert(error); 
-                  alert(xhr); 
-                  alert(code); 
-            },
-            success: function(data) 
-            {
-                app.utilizeData(data.data);
-            }
+        app.download(file_url, function(data)
+        {
+             app.utilizeData(data.data);
         });
     },
     utilizeData: function(data)
