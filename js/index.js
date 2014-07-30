@@ -96,6 +96,7 @@ var app =
                     local_path + local_file,
                     function(theFile) 
                     {
+                        console.log('Downloaded the latest version.');
                         app.utilizeFile(theFile.toURL());
                     },
                     function(error)
@@ -122,7 +123,7 @@ var app =
     },
     utilizeFile: function(file_url)
     {
-        console.log('Utilizing file: ' + file_uri);
+        console.log('Utilizing datafile: ' + file_url);
         $.ajax
         ({
             url: file_url,
@@ -151,4 +152,4 @@ var app =
         $('body').html(data.pagedata);
         $.mobile.changePage('#home'); //@todo: the last remembered page :)
     }
-};
+};p
