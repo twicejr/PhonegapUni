@@ -3,6 +3,7 @@ var app =
     ready: false,
     state_online: null,
     remote: 'http://192.168.1.123/zppc-server/',
+    local_cachefile: 'cache.json',
     api_page: 'api/json/read/pages',
     api_pagesum: 'api/json/read/pagesum',
     folder: 'zppc',
@@ -20,8 +21,8 @@ var app =
         //@see www/config.xml also!!
         // org.apache.cordova.network-information: online offline
         document.addEventListener('online', app.onOnline, false);
-        document.addEventListener('onlineswitch', app.whenOnline, false);
-        document.addEventListener("resume", app.whenOnline, false);
+        document.addEventListener('onlineswitch', app.whenReady, false);
+        document.addEventListener("resume", app.whenReady, false);
         document.addEventListener('offline', app.onOffline, false);
         document.addEventListener('offlineswitch', app.wentOffline, false);
         // org.apache.cordova.battery-status: batterycritical    batterylow    batterystatus
@@ -30,7 +31,7 @@ var app =
     {
         console.log('Device ready!');
         app.ready = true;        
-        app.whenOnline();
+        app.whenReady();
     },
     onOnline: function()
     {
@@ -62,14 +63,14 @@ var app =
     {
         
     },
-    whenOnline: function()
+    whenReady: function()
     {
         if(!app.ready)
         {
             return;
         }
         
-        app.updateIfRequired(app.folder + '/cache.json');
+        app.updateAndOrInitializeData(app.folder + '/' + app.local_cachefile);
     },
     download: function(file_url, successFunction)
     {
@@ -81,12 +82,12 @@ var app =
             type: 'GET',
             error: function(xhr,error,code) 
             {
-                console.log('Error ' + error + xhr + code);
+                app.useCurrentData(); //If local data is available, use that...
             },
             success: successFunction
         });  
     },
-    updateIfRequired: function(path)
+    updateAndOrInitializeData: function(path)
     {
         console.log('Checking if we already have a cachefile..');
         if(app.cacheFile)
@@ -115,7 +116,7 @@ var app =
                     console.log('Not online (anymore). Cannot sync.');
                     return;
                 }
-                app.update(app.remote + app.api_page, 'cache.json');
+                app.update(app.remote + app.api_page, app.local_cachefile);
             });
         }, function(e)
         {
@@ -138,7 +139,7 @@ var app =
             else
             {
                 console.log('.. data is old (' + data.data + ' | ' + checksum + '). Fetching data now.');
-                app.update(app.remote + app.api_page, 'cache.json');
+                app.update(app.remote + app.api_page, app.local_cachefile);
             }
         });
     },
