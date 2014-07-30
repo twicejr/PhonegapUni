@@ -81,17 +81,29 @@ var app =
             return;
         }
         
-        app.checkIfFileExists(app.folder + '/cache.json');
-        if(!app.cacheFile)
+        app.updateIfRequired(app.folder + '/cache.json');
+    },
+    updateIfRequired: function(path)
+    {
+        console.log('Checking if we already have a cachefile..');
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
         {
-            console.log('.. no data. Fetching data now.'); //@todo: check for latest
-            app.update(app.remote + app.api_page, 'cache.json');
-        }
-        else
+            fileSystem.root.getFile(path, { create: false }, function(fileEntry)
+            {
+                app.cacheFile = fileEntry.toURL();
+                console.log('.. we already have data at ' + app.cacheFile);
+                app.utilizeFile(app.cacheFile);
+                
+            }, function()
+            {
+                app.cacheFile = false;
+                console.log('.. no data. Fetching data now.'); //@todo: check for latest
+                app.update(app.remote + app.api_page, 'cache.json');
+            });
+        }, function(e)
         {
-            console.log('.. we already have data at ' + app.cacheFile);
-            app.utilizeFile(app.cacheFile);
-        }
+           console.log('..error in checking if the file exists!' + e);
+        });
     },
     update: function(remote_file, local_file)
     {
@@ -122,25 +134,6 @@ var app =
             });
         });
         return returnvalue;
-    },
-    checkIfFileExists: function(path)
-    {
-        console.log('Checking if we already have a cachefile..');
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
-        {
-            fileSystem.root.getFile(path, { create: false }, function(fileEntry)
-            {
-                app.cacheFile = fileEntry.toURL(); 
-                console.log('..file exists!');
-            }, function()
-            {
-                app.cacheFile = false;
-                console.log('..file not exists.');
-            });
-        }, function(e)
-        {
-           console.log('..error in checking if the file exists!' + e);
-        });
     },
     utilizeFile: function(file_url)
     {
