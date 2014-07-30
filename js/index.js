@@ -152,4 +152,4 @@ var app =
         $('body').html(data.pagedata);
         $.mobile.changePage('#home'); //@todo: the last remembered page :)
     }
-};p
+};
