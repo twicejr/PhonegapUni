@@ -128,7 +128,16 @@ var app =
             if(checksum == data.data)
             {
                 console.log('..we are up to date!');
-                app.utilizeFile(app.cacheFile);
+                
+                if($('.app').hasClass('initializing'))
+                {
+                    console.log('Using the data we have..');
+                    app.utilizeFile(app.cacheFile);
+                }
+                else
+                {
+                    console.log('App is already loaded with latest data.');
+                }
             }
             else
             {
