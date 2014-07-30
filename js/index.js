@@ -1,6 +1,6 @@
 var app =
 {
-    ready: true,
+    ready: false,
     state_online: null,
     remote: 'http://192.168.1.123/zppc-server/',
     api_page: 'api/json/read/pages',
