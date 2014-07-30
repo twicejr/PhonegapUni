@@ -71,7 +71,7 @@ var app =
         
         if(app.cacheFile)
         {
-            console.log('Went online but already got a cache during this session! Close the app to refresh the data.'); //@todo: or maybe check each x minutes.
+            console.log('Went online but we have data already. Stopping refresh.'); //@todo: or maybe check each x minutes.
             return;
         }
         
