@@ -1,5 +1,6 @@
 var app =
 {
+    ready: true,
     state_online: null,
     remote: 'http://192.168.1.123/zppc-server/',
     api_page: 'api/json/read/pages',
@@ -19,7 +20,7 @@ var app =
 
         // org.apache.cordova.network-information: online offline
         document.addEventListener('online', app.onOnline, false);
-        document.addEventListener('onlineswitch', app.wentOnline, false);
+        document.addEventListener('onlineswitch', app.whenOnline, false);
         document.addEventListener('offline', app.onOffline, false);
         document.addEventListener('offlineswitch', app.wentOffline, false);
         // org.apache.cordova.battery-status: batterycritical    batterylow    batterystatus
@@ -27,7 +28,9 @@ var app =
     initialized: function()
     {
         console.log('Device ready!');
+        app.ready = true;        
         $('.app').removeClass('initializing');
+        app.whenOnline();
     },
     onOnline: function()
     {
@@ -59,8 +62,13 @@ var app =
     {
         
     },
-    wentOnline: function()
+    whenOnline: function()
     {
+        if(!app.ready)
+        {
+            return;
+        }
+        
         if(app.cacheFile)
         {
             console.log('Went online but already got a cache during this session! Close the app to refresh the data.'); //@todo: or maybe check each x minutes.
