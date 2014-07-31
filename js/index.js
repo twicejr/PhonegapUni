@@ -121,7 +121,6 @@ var app =
         
         app.fs.root.getFile(path, { create: false }, function(fileEntry)
         {
-            console.log('Got file.');
             app.cacheFile = fileEntry.toURL();
             console.log('.. we already have data at ' + app.cacheFile + ' . Checking if it is up to date before using it..');
 
@@ -183,11 +182,11 @@ var app =
         app.fs.root.getDirectory(app.folder, {create: true, exclusive: false}, function(fileEntry) 
         {
             console.log('Got dir.');
+            console.log(fileEntry.toURL() );
             var local_path = fileEntry.toURL() + '/';
-            console.log('local path: ' + local_path);
+            console.log('1');
             var fileTransfer = new FileTransfer();
-            
-            console.log('123');
+            console.log('2');
             fileTransfer.download
             (
                 remote_file,
@@ -204,10 +203,7 @@ var app =
                 },
                 {data: {lang: app.lang}}
             );
-    
-            console.log('456');
         });
-        console.log('xxx');
         return returnvalue;
     },
     utilizeFile: function(file_url)
