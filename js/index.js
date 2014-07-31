@@ -48,14 +48,11 @@ var app =
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
         {
             app.fs = fileSystem;
-            app.ready = true;
             navigator.globalization.getLocaleName
             (
-                function (locale) {app.lang = locale.value},
-                function () {console.log('Language could not be detected!');}
+                function (locale) {app.lang = locale.value; app.ready = true; app.whenReady();},
+                function () {console.log('Language could not be detected!'); app.lang = locale.value; app.ready = true; app.whenReady();}
             );
-
-            app.whenReady();
         });
     },
     onOnline: function()
@@ -124,6 +121,7 @@ var app =
         
         app.fs.root.getFile(path, { create: false }, function(fileEntry)
         {
+            console.log('Got file.');
             app.cacheFile = fileEntry.toURL();
             console.log('.. we already have data at ' + app.cacheFile + ' . Checking if it is up to date before using it..');
 
@@ -184,6 +182,7 @@ var app =
         var returnvalue;
         app.fs.root.getDirectory(app.folder, {create: true, exclusive: false}, function(fileEntry) 
         {
+            console.log('Got dir.');
             var local_path = fileEntry.toURL() + '/';
             var fileTransfer = new FileTransfer();
             fileTransfer.download
