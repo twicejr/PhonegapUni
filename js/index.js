@@ -45,7 +45,7 @@ var app =
     initialized: function()
     {
         console.log('Device ready!');
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
+        window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fileSystem)
         {
             app.fs = fileSystem;
             app.ready = true;
