@@ -1,5 +1,6 @@
 var app =
 {
+    fs: null,
     ready: false,
     lang: 'nl',
     state_online: null,
@@ -31,6 +32,12 @@ var app =
     initialized: function()
     {
         console.log('Device ready!');
+        
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
+        {
+            app.fs = fileSystem;
+        });
+        
         app.ready = true;
         navigator.globalization.getLocaleName
         (
@@ -104,32 +111,26 @@ var app =
             //@todo:might want to return now, and periodically check only...
         }
         
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
+        app.fs.root.getFile(path, { create: false }, function(fileEntry)
         {
-            fileSystem.root.getFile(path, { create: false }, function(fileEntry)
+            app.cacheFile = fileEntry.toURL();
+            console.log('.. we already have data at ' + app.cacheFile + ' . Checking if it is up to date before using it..');
+
+            app.download(app.cacheFile, function(data)
             {
-                app.cacheFile = fileEntry.toURL();
-                console.log('.. we already have data at ' + app.cacheFile + ' . Checking if it is up to date before using it..');
-                
-                app.download(app.cacheFile, function(data)
-                {
-                    app.updateWhenNewVersion(app.remote + app.api_pagesum, data.data.sum); //subarr
-                });
-            },
-            function()
-            {
-                app.cacheFile = false;
-                console.log('.. no data. Fetching data now.');
-                if(!app.state_online)
-                {
-                    console.log('Not online (anymore). Cannot sync.');
-                    return;
-                }
-                app.update(app.remote + app.api_page, app.local_cachefile);
+                app.updateWhenNewVersion(app.remote + app.api_pagesum, data.data.sum); //subarr
             });
-        }, function(e)
+        },
+        function()
         {
-           console.log('..error in checking if the file exists!' + e);
+            app.cacheFile = false;
+            console.log('.. no data. Fetching data now.');
+            if(!app.state_online)
+            {
+                console.log('Not online (anymore). Cannot sync.');
+                return;
+            }
+            app.update(app.remote + app.api_page, app.local_cachefile);
         });
     },
     updateWhenNewVersion: function(remote_file, checksum)
@@ -170,32 +171,26 @@ var app =
         $('.app').addClass('initializing'); //could be that it is already added, or that we are actually RE-initializing.
         
         var returnvalue;
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) 
+        app.fs.root.getDirectory(app.folder, {create: true, exclusive: false}, function(fileEntry) 
         {
-            fileSystem.root.getDirectory(app.folder, {create: true, exclusive: false}, function(fileEntry) 
-            {
-                var local_path = fileEntry.toURL() + '/';
-                var fileTransfer = new FileTransfer();
-                fileTransfer.download
-                (
-                    remote_file,
-                    local_path + local_file,
-                    function(theFile) 
-                    {
-                        console.log('Downloaded the latest version.');
-                        app.utilizeFile(theFile.toURL());
-                    },
-                    function(error)
-                    {
-                        console.log(error);
-                        return false;
-                    },
-                    {data: {lang: app.lang}}
-                );
-            });
-        }, function(e)
-        {
-           console.log('..error in checking if the file exists!' + e);
+            var local_path = fileEntry.toURL() + '/';
+            var fileTransfer = new FileTransfer();
+            fileTransfer.download
+            (
+                remote_file,
+                local_path + local_file,
+                function(theFile) 
+                {
+                    console.log('Downloaded the latest version.');
+                    app.utilizeFile(theFile.toURL());
+                },
+                function(error)
+                {
+                    console.log(error);
+                    return false;
+                },
+                {data: {lang: app.lang}}
+            );
         });
         return returnvalue;
     },
