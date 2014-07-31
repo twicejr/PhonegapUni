@@ -184,7 +184,10 @@ var app =
         var returnvalue;
         app.fs.root.getDirectory(app.folder, {create: true, exclusive: false}, function(fileEntry) 
         {
+            console.log(app.folder);
+            
             var local_path = fileEntry.toURL();
+            console.log(local_path);
             var fileTransfer = new FileTransfer();
             fileTransfer.download
             (
