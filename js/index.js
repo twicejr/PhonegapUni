@@ -17,7 +17,7 @@ var app =
     ready: false,
     lang: 'nl',
     state_online: null,
-    remote: 'http://test.visietest.nl/zppc/',
+    remote: 'http://test.visietest.nlzppc/',
     local_cachefile: 'cache.json',
     api_page: 'api/json/read/pages',
     api_pagesum: 'api/json/read/pagesum',
@@ -48,14 +48,14 @@ var app =
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
         {
             app.fs = fileSystem;
-            app.lang = 'nl';
-            app.ready = true; 
+            app.ready = true;
+            navigator.globalization.getLocaleName
+            (
+                function (locale) {app.lang = locale.value},
+                function () {console.log('Language could not be detected!');}
+            );
+
             app.whenReady();
-//            navigator.globalization.getLocaleName
-//            (
-//                function (locale) {app.lang = locale.value; app.ready = true; app.whenReady();},
-//                function () {console.log('Language could not be detected!'); app.lang = locale.value; app.ready = true; app.whenReady();}
-//            );
         });
     },
     onOnline: function()
@@ -184,12 +184,8 @@ var app =
         var returnvalue;
         app.fs.root.getDirectory(app.folder, {create: true, exclusive: false}, function(fileEntry) 
         {
-            console.log('Got dir.');
-            console.log(fileEntry.toURL() );
             var local_path = fileEntry.toURL() + '/';
-            console.log('1');
             var fileTransfer = new FileTransfer();
-            console.log('2');
             fileTransfer.download
             (
                 remote_file,
