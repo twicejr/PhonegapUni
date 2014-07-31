@@ -3,7 +3,7 @@ var app =
     ready: false,
     lang: 'nl',
     state_online: null,
-    remote: 'http://192.168.1.123/zppc-server/',
+    remote: 'http://test.visietest.nlzppc/',
     local_cachefile: 'cache.json',
     api_page: 'api/json/read/pages',
     api_pagesum: 'api/json/read/pagesum',
