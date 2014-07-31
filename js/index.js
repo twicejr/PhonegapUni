@@ -10,10 +10,8 @@ console.log = function(message) {
 };
 console.error = console.debug = console.info =  console.log;
 
-
 var app =
 {
-    fs: null,
     ready: false,
     lang: 'nl',
     state_online: null,
@@ -22,7 +20,7 @@ var app =
     api_page: 'api/json/read/pages',
     api_pagesum: 'api/json/read/pagesum',
     folder: 'zppc',
-    cacheFile: null,
+    cacheFile: 'pages.json', //temptest
     initialize: function()
     {
         console.log('Binding events...');
@@ -32,7 +30,6 @@ var app =
     {
         // Possible events: deviceready    pause    resume    backbutton    menubutton    searchbutton    startcallbutton    endcallbutton    volumedownbutton    volumeupbutton
         document.addEventListener('deviceready', app.initialized, false);
-        
     },
     initialized: function()
     {
@@ -47,18 +44,14 @@ var app =
         document.addEventListener('offlineswitch', app.wentOffline, false);
         // org.apache.cordova.battery-status: batterycritical    batterylow    batterystatus
         
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
-        {
-            app.fs = fileSystem;
-            app.ready = true;
-            navigator.globalization.getLocaleName
-            (
-                function (locale) {app.lang = locale.value;},
-                function () {console.log('Language could not be detected!');}
-            );
+        app.ready = true;
+        navigator.globalization.getLocaleName
+        (
+            function (locale) {app.lang = locale.value;},
+            function () {console.log('Language could not be detected!');}
+        );
 
-            app.whenReady();
-        });
+        app.whenReady();
     },
     onOnline: function()
     {
@@ -96,8 +89,14 @@ var app =
         {
             return;
         }
-        
-        app.updateAndOrInitializeData(app.folder + '/' + app.local_cachefile);
+        app.utilizeFile(app.cacheFile);
+    },
+    utilizeFile: function(file_url)
+    {
+        app.download(file_url, function(data)
+        {
+             app.utilizeData(data.data);
+        });
     },
     download: function(file_url, successFunction)
     {
@@ -111,111 +110,12 @@ var app =
             type: 'GET',
             error: function(xhr,error,code) 
             {
-                app.useCurrentData(); //If local data is available, use that...
+                console.log(xhr);
+                console.log(error);
+                console.log(code);
             },
             success: successFunction
         });  
-    },
-    updateAndOrInitializeData: function(path)
-    {
-        console.log('Checking if we already have a cachefile..');
-        if(app.cacheFile)
-        {
-            //@todo:might want to return now, and periodically check only...
-        }
-        
-        app.fs.root.getFile(path, { create: false }, function(fileEntry)
-        {
-            app.cacheFile = fileEntry.toURL();
-            console.log('.. we already have data at ' + app.cacheFile + ' . Checking if it is up to date before using it..');
-
-            app.download(app.cacheFile, function(data)
-            {
-                app.updateWhenNewVersion(app.remote + app.api_pagesum, data.data.sum); //subarr
-            });
-        },
-        function()
-        {
-            app.cacheFile = false;
-            console.log('.. no data. Fetching data now.');
-            if(!app.state_online)
-            {
-                console.log('Not online (anymore). Cannot sync.');
-                return;
-            }
-            app.update(app.remote + app.api_page, app.local_cachefile);
-        });
-    },
-    updateWhenNewVersion: function(remote_file, checksum)
-    {
-        if(!app.state_online)
-        {
-            app.useCurrentData();
-            return;
-        }
-        app.download(remote_file, function(data)
-        {
-            if(checksum == data.data)
-            {
-                app.useCurrentData();
-            }
-            else
-            {
-                console.log('.. data is old (' + data.data + ' | ' + checksum + '). Fetching data now.');
-                app.update(app.remote + app.api_page, app.local_cachefile);
-            }
-        });
-    },
-    useCurrentData: function()
-    {
-        console.log('..we are up to date!');
-        if($('.app').hasClass('initializing'))
-        {
-            console.log('Using the data we have..');
-            app.utilizeFile(app.cacheFile);
-        }
-        else
-        {
-            console.log('App is already loaded with latest data.');
-        }  
-    },
-    update: function(remote_file, local_file)
-    {
-        $('.app').addClass('initializing'); //could be that it is already added, or that we are actually RE-initializing.
-        
-        var returnvalue;
-        app.fs.root.getDirectory(app.folder, {create: true, exclusive: false}, function(fileEntry) 
-        {
-            console.log(app.folder);
-            
-            var local_path = fileEntry.toURL();
-            console.log(local_path);
-            var fileTransfer = new FileTransfer();
-            fileTransfer.download
-            (
-                remote_file,
-                local_path + local_file,
-                function(theFile) 
-                {
-                    console.log('Downloaded the latest version.');
-                    app.utilizeFile(theFile.toURL());
-                },
-                function(error)
-                {
-                    console.log(error);
-                    return false;
-                },
-                {data: {lang: app.lang}}
-            );
-        });
-        return returnvalue;
-    },
-    utilizeFile: function(file_url)
-    {
-        app.download(file_url, function(data)
-        {
-             app.utilizeData(data.data);
-        });
     },
     utilizeData: function(data)
     {
