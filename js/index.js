@@ -33,7 +33,12 @@ var app =
         // Possible events: deviceready    pause    resume    backbutton    menubutton    searchbutton    startcallbutton    endcallbutton    volumedownbutton    volumeupbutton
         document.addEventListener('deviceready', app.initialized, false);
         
+    },
+    initialized: function()
+    {
+        console.log('Device ready!');
         //@see www/config.xml also!!
+        
         // org.apache.cordova.network-information: online offline
         document.addEventListener('online', app.onOnline, false);
         document.addEventListener('onlineswitch', app.whenReady, false);
@@ -41,17 +46,14 @@ var app =
         document.addEventListener('offline', app.onOffline, false);
         document.addEventListener('offlineswitch', app.wentOffline, false);
         // org.apache.cordova.battery-status: batterycritical    batterylow    batterystatus
-    },
-    initialized: function()
-    {
-        console.log('Device ready!');
-        window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fileSystem)
+        
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
         {
             app.fs = fileSystem;
             app.ready = true;
             navigator.globalization.getLocaleName
             (
-                function (locale) {app.lang = locale.value},
+                function (locale) {app.lang = locale.value;},
                 function () {console.log('Language could not be detected!');}
             );
 
@@ -88,14 +90,53 @@ var app =
     {
         
     },
+    test: function()
+    {
+        console.log("start download");
+        var downloadUrl = "http://tweakers.net/robots.txt";
+        var relativeFilePath = "MyDir/file_name.hwdi";
+        
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+           var fileTransfer = new FileTransfer();
+           fileTransfer.onprogress = function(progressEvent) {
+                if (progressEvent.lengthComputable) {
+                    var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+                    $("#progress").html(perc + "%")
+                    console.log(perc + "%")
+                }
+            };
+           fileTransfer.download(
+              downloadUrl,
+              fileSystem.root.toURL() + '/' + relativeFilePath,
+
+              function (entry) {
+                 console.log("Success");
+                 window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function (fs){
+                    zip.unzip(fileSystem.root.toURL() + '/' + relativeFilePath, fs.root.toURL() + '/MyDir', function(){
+                        //success callback
+                        console.log("FILE EXTRACTED");
+                        $("#progress").html("Done!");
+                    },function(progressEvent){
+                        //progress callback
+                        console.log("progressss");
+                        $("#progress").html(Math.round((progressEvent.loaded / progressEvent.total) * 100));
+                    });
+                 });
+              },
+              function (error) {
+                console.log("Error during download. Code = " + error.code);
+              }
+           );
+        });  
+    },
     whenReady: function()
     {
         if(!app.ready)
         {
             return;
         }
-        
-        app.updateAndOrInitializeData(app.folder + '/' + app.local_cachefile);
+        app.test();
+       //app.updateAndOrInitializeData(app.folder + '/' + app.local_cachefile);
     },
     download: function(file_url, successFunction)
     {
