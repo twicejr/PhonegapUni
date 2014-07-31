@@ -17,7 +17,7 @@ var app =
     ready: false,
     lang: 'nl',
     state_online: null,
-    remote: 'http://test.visietest.nlzppc/',
+    remote: 'http://test.visietest.nl/zppc/',
     local_cachefile: 'cache.json',
     api_page: 'api/json/read/pages',
     api_pagesum: 'api/json/read/pagesum',
@@ -184,7 +184,7 @@ var app =
         var returnvalue;
         app.fs.root.getDirectory(app.folder, {create: true, exclusive: false}, function(fileEntry) 
         {
-            var local_path = fileEntry.toURL() + '/';
+            var local_path = fileEntry.toURL();
             var fileTransfer = new FileTransfer();
             fileTransfer.download
             (
