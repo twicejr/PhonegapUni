@@ -11,7 +11,7 @@ var app =
     cacheFile: null,
     initialize: function()
     {
-        alert('Binding events...');
+        console.log('Binding events...');
         app.bindEvents();
     },
     bindEvents: function()
@@ -30,22 +30,22 @@ var app =
     },
     initialized: function()
     {
-        alert('Device ready!');
+        console.log('Device ready!');
         app.ready = true;
         navigator.globalization.getLocaleName
         (
             function (locale) {app.lang = locale.value},
-            function () {alert('Language could not be detected!');}
+            function () {console.log('Language could not be detected!');}
         );
 
         app.whenReady();
     },
     onOnline: function()
     {
-        alert('Device changed connection to online..');
+        console.log('Device changed connection to online..');
         if (app.state_online === true)
         {
-            alert('..but we already were online.');
+            console.log('..but we already were online.');
             return;
         }
         app.state_online = true;
@@ -55,10 +55,10 @@ var app =
     },
     onOffline: function()
     {
-        alert('Device changed connection to offline.');
+        console.log('Device changed connection to offline.');
         if (app.state_online === false)
         {
-            alert('..but we already were offline.');
+            console.log('..but we already were offline.');
             return;
         }
         app.state_online = false;
@@ -82,7 +82,7 @@ var app =
     download: function(file_url, successFunction)
     {
         var parameters = {lang: app.lang};
-        alert('Download file ' + file_url);
+        console.log('Download file ' + file_url);
         $.ajax
         ({
             url: file_url,
@@ -98,7 +98,7 @@ var app =
     },
     updateAndOrInitializeData: function(path)
     {
-        alert('Checking if we already have a cachefile..');
+        console.log('Checking if we already have a cachefile..');
         if(app.cacheFile)
         {
             //@todo:might want to return now, and periodically check only...
@@ -109,7 +109,7 @@ var app =
             fileSystem.root.getFile(path, { create: false }, function(fileEntry)
             {
                 app.cacheFile = fileEntry.toURL();
-                alert('.. we already have data at ' + app.cacheFile + ' . Checking if it is up to date before using it..');
+                console.log('.. we already have data at ' + app.cacheFile + ' . Checking if it is up to date before using it..');
                 
                 app.download(app.cacheFile, function(data)
                 {
@@ -119,17 +119,17 @@ var app =
             function()
             {
                 app.cacheFile = false;
-                alert('.. no data. Fetching data now.');
+                console.log('.. no data. Fetching data now.');
                 if(!app.state_online)
                 {
-                    alert('Not online (anymore). Cannot sync.');
+                    console.log('Not online (anymore). Cannot sync.');
                     return;
                 }
                 app.update(app.remote + app.api_page, app.local_cachefile);
             });
         }, function(e)
         {
-           alert('..error in checking if the file exists!' + e);
+           console.log('..error in checking if the file exists!' + e);
         });
     },
     updateWhenNewVersion: function(remote_file, checksum)
@@ -147,22 +147,22 @@ var app =
             }
             else
             {
-                alert('.. data is old (' + data.data + ' | ' + checksum + '). Fetching data now.');
+                console.log('.. data is old (' + data.data + ' | ' + checksum + '). Fetching data now.');
                 app.update(app.remote + app.api_page, app.local_cachefile);
             }
         });
     },
     useCurrentData: function()
     {
-        alert('..we are up to date!');
+        console.log('..we are up to date!');
         if($('.app').hasClass('initializing'))
         {
-            alert('Using the data we have..');
+            console.log('Using the data we have..');
             app.utilizeFile(app.cacheFile);
         }
         else
         {
-            alert('App is already loaded with latest data.');
+            console.log('App is already loaded with latest data.');
         }  
     },
     update: function(remote_file, local_file)
@@ -182,12 +182,12 @@ var app =
                     local_path + local_file,
                     function(theFile) 
                     {
-                        alert('Downloaded the latest version.');
+                        console.log('Downloaded the latest version.');
                         app.utilizeFile(theFile.toURL());
                     },
                     function(error)
                     {
-                        alert(error);
+                        console.log(error);
                         return false;
                     },
                     {data: {lang: app.lang}}
@@ -195,7 +195,7 @@ var app =
             });
         }, function(e)
         {
-           alert('..error in checking if the file exists!' + e);
+           console.log('..error in checking if the file exists!' + e);
         });
         return returnvalue;
     },
