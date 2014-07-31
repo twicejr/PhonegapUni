@@ -193,6 +193,9 @@ var app =
                     {data: {lang: app.lang}}
                 );
             });
+        }, function(e)
+        {
+           alert('..error in checking if the file exists!' + e);
         });
         return returnvalue;
     },
