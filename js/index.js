@@ -184,7 +184,10 @@ var app =
         {
             console.log('Got dir.');
             var local_path = fileEntry.toURL() + '/';
+            console.log('local path: ' + local_path);
             var fileTransfer = new FileTransfer();
+            
+            console.log('123');
             fileTransfer.download
             (
                 remote_file,
@@ -201,7 +204,10 @@ var app =
                 },
                 {data: {lang: app.lang}}
             );
+    
+            console.log('456');
         });
+        console.log('xxx');
         return returnvalue;
     },
     utilizeFile: function(file_url)
