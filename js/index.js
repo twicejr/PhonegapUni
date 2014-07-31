@@ -1,6 +1,7 @@
 var app =
 {
     ready: false,
+    lang: 'nl',
     state_online: null,
     remote: 'http://192.168.1.123/zppc-server/',
     local_cachefile: 'cache.json',
@@ -30,7 +31,13 @@ var app =
     initialized: function()
     {
         console.log('Device ready!');
-        app.ready = true;        
+        app.ready = true;
+        navigator.globalization.getLocaleName
+        (
+            function (locale) {app.lang = locale.value},
+            function () {console.log('Language could not be detected!');}
+        );
+
         app.whenReady();
     },
     onOnline: function()
@@ -74,10 +81,12 @@ var app =
     },
     download: function(file_url, successFunction)
     {
+        var parameters = {lang: app.lang};
         console.log('Download file ' + file_url);
         $.ajax
         ({
             url: file_url,
+            data: parameters,
             dataType: 'json',
             type: 'GET',
             error: function(xhr,error,code) 
@@ -180,7 +189,8 @@ var app =
                     {
                         console.log(error);
                         return false;
-                    }
+                    },
+                    {data: {lang: app.lang}}
                 );
             });
         });
