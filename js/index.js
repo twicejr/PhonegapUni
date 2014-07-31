@@ -45,20 +45,18 @@ var app =
     initialized: function()
     {
         console.log('Device ready!');
-        
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
         {
             app.fs = fileSystem;
-        });
-        
-        app.ready = true;
-        navigator.globalization.getLocaleName
-        (
-            function (locale) {app.lang = locale.value},
-            function () {console.log('Language could not be detected!');}
-        );
+            app.ready = true;
+            navigator.globalization.getLocaleName
+            (
+                function (locale) {app.lang = locale.value},
+                function () {console.log('Language could not be detected!');}
+            );
 
-        app.whenReady();
+            app.whenReady();
+        });
     },
     onOnline: function()
     {
