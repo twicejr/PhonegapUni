@@ -17,7 +17,7 @@ var app =
     ready: false,
     lang: 'nl',
     state_online: null,
-    remote: 'http://test.visietest.nlzppc/',
+    remote: 'http://test.visietest.nl/zppc/',
     local_cachefile: 'cache.json',
     api_page: 'api/json/read/pages',
     api_pagesum: 'api/json/read/pagesum',
@@ -48,11 +48,14 @@ var app =
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem)
         {
             app.fs = fileSystem;
-            navigator.globalization.getLocaleName
-            (
-                function (locale) {app.lang = locale.value; app.ready = true; app.whenReady();},
-                function () {console.log('Language could not be detected!'); app.lang = locale.value; app.ready = true; app.whenReady();}
-            );
+            app.lang = 'nl';
+            app.ready = true; 
+            app.whenReady();
+//            navigator.globalization.getLocaleName
+//            (
+//                function (locale) {app.lang = locale.value; app.ready = true; app.whenReady();},
+//                function () {console.log('Language could not be detected!'); app.lang = locale.value; app.ready = true; app.whenReady();}
+//            );
         });
     },
     onOnline: function()
