@@ -58,12 +58,13 @@ var fs =
     },
     _init: function(callback, type)
     {
-        fs.type = type ? type : LocalFileSystem.PERSISTENT;
-        fs._tempStoreCallback = callback;
         if(fs.root)
         {
+            callback(false);
             return; //Already initialized.
         }
+        fs.type = type ? type : LocalFileSystem.PERSISTENT;
+        fs._tempStoreCallback = callback;
         
         //Request the filesystem.
         window.requestFileSystem(fs.type, 0, fs._requestFsSuccess, fs.error);
