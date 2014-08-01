@@ -8,7 +8,7 @@ console.log = function(message) {
     console.olog(message);
     $('.app').append('<p>' + message + '</p>');
 };
-console.error = console.debug = console.info =  console.log;
+console.error = console.debug = console.info = console.log;
 
 var app =
 {
@@ -23,84 +23,90 @@ var app =
     cacheFile: 'pages.json', //temptest
     initialize: function()
     {
-        console.log('Binding events...');
-        app.bindEvents();
+        this.bindEvents();
     },
     bindEvents: function()
     {
         // Possible events: deviceready    pause    resume    backbutton    menubutton    searchbutton    startcallbutton    endcallbutton    volumedownbutton    volumeupbutton
-        document.addEventListener('deviceready', app.initialized, false);
+        document.addEventListener('deviceready', this.initialized, false);
     },
     initialized: function()
     {
         console.log('Device ready!');
-        //@see www/config.xml also!!
         
+        //@see www/config.xml also!!
         // org.apache.cordova.network-information: online offline
-        document.addEventListener('online', app.onOnline, false);
-        document.addEventListener('onlineswitch', app.whenReady, false);
-        document.addEventListener("resume", app.whenReady, false);
-        document.addEventListener('offline', app.onOffline, false);
-        document.addEventListener('offlineswitch', app.wentOffline, false);
+        document.addEventListener('online', this.onOnline, false);
+        document.addEventListener('offline', this.onOffline, false);
+        document.addEventListener('offlineswitch', this.offlineSwitch, false);
+        document.addEventListener('onlineswitch', this.whenReady, false);
+        document.addEventListener("resume", this.whenReady, false);
         // org.apache.cordova.battery-status: batterycritical    batterylow    batterystatus
         
-        app.ready = true;
         navigator.globalization.getLocaleName
         (
-            function (locale) {app.lang = locale.value;},
+            function (locale) {this.lang = locale.value;},
             function () {console.log('Language could not be detected!');}
         );
 
-        app.whenReady();
-    },
-    onOnline: function()
-    {
-        console.log('Device changed connection to online..');
-        if (app.state_online === true)
-        {
-            console.log('..but we already were online.');
-            return;
-        }
-        app.state_online = true;
-        var e = document.createEvent('Events');
-        e.initEvent("onlineswitch");
-        document.dispatchEvent(e);
+        this.ready = true;
+        this.whenReady();
     },
     onOffline: function()
     {
-        console.log('Device changed connection to offline.');
-        if (app.state_online === false)
+        if (this.state_online === false)
         {
-            console.log('..but we already were offline.');
             return;
         }
-        app.state_online = false;
+        this.state_online = false;
         var e = document.createEvent('Events');
         e.initEvent("offlineswitch");
         document.dispatchEvent(e);
     },
-    wentOffline: function()
+    onOnline: function()
     {
-        
+        console.log('We went online.');
+        if (this.state_online === true)
+        {
+            console.log('..but we already were online and should have synced.');
+            return;
+        }
+        this.state_online = true;
+        var e = document.createEvent('Events');
+        e.initEvent("onlineswitch");
+        document.dispatchEvent(e);
+    },
+    offlineSwitch: function()
+    {
+        console.log('We went offline.');
     },
     whenReady: function()
     {
-        if(!app.ready)
+        if(!this.ready)
         {
             return;
         }
-        app.utilizeFile(app.cacheFile);
+        
+        fs.prepare(this.fsReady);
+    },
+    fsReady: function()
+    {
+        fs.download(this.remote + api_page, this.folder + '/' + this.cacheFile, this.downloadedCache);
+    },
+    downloadedCache: function(filename)
+    {
+        console.log(filename);
     },
     utilizeFile: function(file_url)
     {
-        app.download(file_url, function(data)
+        this.download(file_url, function(data)
         {
-             app.utilizeData(data.data);
+             this.utilizeData(data.data);
         });
     },
     download: function(file_url, successFunction)
     {
-        var parameters = {lang: app.lang};
+        var parameters = {lang: this.lang};
         console.log('Download file ' + file_url);
         $.ajax
         ({
