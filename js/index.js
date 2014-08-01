@@ -78,38 +78,43 @@ var app =
     },
     fsReady: function()
     {
-        if(app.state_online)
+        var cachefile_location = fs.buildFileUrl(app.folder + '/' + app.cacheFile);
+
+        //Check if file exists.
+        fs.getFileContents(cachefile_location, function(data)
         {
-            fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.downloadResult);
-        }
-        else
-        {
-            console.log('We are offline');
-        }
+            if(data)
+            {
+                app.utilizeData(data);
+            }
+            else
+            {
+                fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.utilizeDownloadResult);
+            }
+        });
     },
-    downloadResult: function(filename)
+    utilizeDownloadResult: function(filename)
     {
         if(!filename)
         {
-            console.log('Fubar');
+            console.log('File did not download.');
             return;
         }
-    },
-    utilizeFile: function(file_url)
-    {
-        fs.getFileContents(file_url, function(data)
+        console.log('Utilizing downloaded file: ' + filename);
+        fs.getFileContents(filename, function(data)
         {
-             app.utilizeData(data.data);
+            app.utilizeData(data); //the actual dataset.
         });
     },
     utilizeData: function(data)
     {
-        if(data.css)
+        var dataset = data.data;
+        if(dataset.css)
         {
             $('#style_remote').remove();
-            $('head').append('<style type="text/css" id="style_remote">' + data.css + '</style>');
+            $('head').append('<style type="text/css" id="style_remote">' + dataset.css + '</style>');
         }
-        $('body').html(data.pagedata);
+        $('body').html(dataset.pagedata);
         
         var activePage = $.mobile.activePage.attr("id");
         if(activePage)
