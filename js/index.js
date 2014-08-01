@@ -147,18 +147,16 @@ var app =
         $('a[href=' + activePage + ']').addClass('ui-btn-active');
         $.mobile.changePage(activePage);
         
-        $('[data-role=page]').on('pageshow', function()
+        $('div[data-role=page]').on('pagebeforeshow', function()
         {
             if (window.location.hash != '')
             {
                 $('a.ui-btn').removeClass('ui-btn-active');
+                console.log(window.location.hash);
                 $('a.ui-btn[href="' + window.location.hash + '"]').addClass('ui-btn-active');
             }
         });
         
-        $('.logo').live('vclick', function() {
-          $('#navbar a').removeClass('ui-btn-active');
-        });
         
         app.done = true; //All is loaded. Nothing needs to be loaded anymore.
     }
