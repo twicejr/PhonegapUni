@@ -78,7 +78,7 @@ var app =
     {
         var cachefile_location = fs.buildFileUrl(app.folder + '/' + app.cacheFile);
 
-        console.log('lang');
+        //@todo: use lang         console.log(app.lang);      
         //Check if file exists.
         fs.getFileContents(cachefile_location, function(data)
         {
