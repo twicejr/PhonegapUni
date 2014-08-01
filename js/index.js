@@ -4,7 +4,7 @@ var app =
     ready: false,
     lang: 'nl',
     state_online: null,
-    remote: 'http://192.168.1.123/zppc-server/',
+    remote: 'http://test.visietest.nl/zppc/', //@todo: change it to the appropriate.
     api_page: 'api/json/read/pages',
     api_pagesum: 'api/json/read/pagesum',
     folder: 'zppc',
