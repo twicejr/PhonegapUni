@@ -1,5 +1,6 @@
 var app =
 {
+    done: false,
     ready: false,
     lang: 'nl',
     state_online: null,
@@ -74,7 +75,7 @@ var app =
     },
     whenReady: function()
     {
-        if(app.ready)
+        if(app.ready && !app.done)
         {
             fs.prepare(app.checkData);
         }
@@ -146,5 +147,7 @@ var app =
         
         $('.app').removeClass('initializing');
         $.mobile.changePage(activePage);
+        
+        app.done = true; //All is loaded. Nothing needs to be loaded anymore.
     }
 };
