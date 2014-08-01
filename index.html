@@ -9,13 +9,10 @@
         
         <link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.3.css" />
         
-        <!-- inline style for fastest parsing -->
         <style type="text/css">
-            /*todo: add spinner.*/
             .app.initializing
             {
                 position:fixed;
-                background: url('img/logo.png') center center no-repeat, url('css/images/ajax-loader.gif') bottom center no-repeat;
                 width: 100%;
                 height: 100%;
             }
@@ -23,7 +20,12 @@
         <title>ZPPC</title>
     </head>
     <body>
-        <div class="app initializing"></div> <!-- @todo: it would be wise to add a default page .... no connection would be very ugly otherwise. -->
+        <div class="app initializing">
+           <div class="spinner">
+                <div class="double-bounce1"></div>
+                <div class="double-bounce2"></div>
+          </div>
+        </div> <!-- @todo: it would be wise to add a default page .... no connection would be very ugly otherwise. -->
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/jquery.1.11.1.min.js"></script>
         <script type="text/javascript" src="js/jquery.mobile-1.4.3.js"></script>

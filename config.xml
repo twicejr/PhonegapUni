@@ -24,6 +24,8 @@
     <preference name="android-minSdkVersion" value="7" />
     <preference name="android-installLocation" value="auto" />
     <preference name="iosPersistentFileLocation" value="Compatibility" />
+    <preference name="StatusBarOverlaysWebView" value="false" />
+    
 <!--    <gap:plugin name="org.apache.cordova.battery-status" />
     <gap:plugin name="org.apache.cordova.camera" />
     <gap:plugin name="org.apache.cordova.media-capture" />
@@ -43,6 +45,7 @@
     <gap:plugin name="org.apache.cordova.globalization" />
     <gap:plugin name="org.apache.cordova.device-orientation" />
     <gap:plugin name="org.apache.cordova.network-information" />
+    <gap:plugin name="com.phonegap.plugin.statusbar" />
     
     <!-- todo: icons.. -->
     <icon src="icon.png" />
