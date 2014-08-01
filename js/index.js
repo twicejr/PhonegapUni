@@ -3,12 +3,11 @@ var app =
     ready: false,
     lang: 'nl',
     state_online: null,
-    remote: 'http://test.visietest.nl/zppc/',
-    local_cachefile: 'cache.json',
+    remote: 'http://192.168.1.123/zppc-server/',
     api_page: 'api/json/read/pages',
     api_pagesum: 'api/json/read/pagesum',
     folder: 'zppc',
-    cacheFile: 'pages.json', //temptest
+    cacheFile: 'pages.json',
     initialize: function()
     {
         app.bindEvents();
@@ -34,7 +33,13 @@ var app =
         app.ready = true;
         navigator.globalization.getLocaleName
         (
-            function (locale) {app.lang = locale.value;},
+            function (locale) 
+            {
+                //Add the language when it is available.
+                app.lang = locale.value;
+                app.api_page += '?lang=' + app.lang;
+                app.api_pagesum += '?lang=' + app.lang;
+            },
             function () {console.log('Language could not be detected!');}
         );
         app.whenReady();
@@ -71,14 +76,13 @@ var app =
     {
         if(app.ready)
         {
-            fs.prepare(app.fsReady);
+            fs.prepare(app.checkData);
         }
     },
-    fsReady: function()
+    checkData: function()
     {
         var cachefile_location = fs.buildFileUrl(app.folder + '/' + app.cacheFile);
 
-        //@todo: use lang         console.log(app.lang);      
         //Check if file exists.
         fs.getFileContents(cachefile_location, function(data)
         {
