@@ -14,7 +14,7 @@ var fs =
     download: function(remote_file, local_file, local_folder, callback)
     {
         var local_filepath = fs.root + local_folder + '/' + local_file;
-        console.log('Downloading file ' + remote_file + ' to local ' + local_filepath);
+        console.log('Downloading file: ' + remote_file + ' to local: ' + local_filepath);
         this._fileSystem.root.getDirectory(local_folder, {create: true, exclusive: false}, function()
         {
             var fileTransfer = new FileTransfer();
@@ -40,7 +40,7 @@ var fs =
     },
     getFileContents: function(file_url, callback)
     {
-        console.log('Get file contents:' + file_url);
+        console.log('Get file contents: ' + file_url);
         $.ajax
         ({
             url: file_url,

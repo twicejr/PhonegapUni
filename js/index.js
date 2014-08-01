@@ -88,10 +88,14 @@ var app =
                 return;
             }
            
+            var checksum = data.sum;
+            console.log(checksum);
             //Data exists so use it when it is up to date.
             fs.getFileContents(app.remote + app.api_pagesum, function(checksumdata)
             {
-                if(checksumdata && checksumdata.data == data.sum)
+                console.log(checksumdata);
+                console.log(checksum);
+                if(checksumdata && checksumdata.data == checksum)
                 {
                     app.utilizeData(data);
                 }
