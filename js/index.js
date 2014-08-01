@@ -31,14 +31,12 @@ var app =
     initialized: function()
     {
         console.log('Device ready!');
-        
+        app.ready = true;
         navigator.globalization.getLocaleName
         (
             function (locale) {app.lang = locale.value;},
             function () {console.log('Language could not be detected!');}
         );
-
-        app.ready = true;
         app.whenReady();
     },
     onOffline: function()
@@ -80,18 +78,33 @@ var app =
     {
         var cachefile_location = fs.buildFileUrl(app.folder + '/' + app.cacheFile);
 
+        console.log('lang');
         //Check if file exists.
         fs.getFileContents(cachefile_location, function(data)
         {
-            if(data)
-            {
-                app.utilizeData(data);
+            if(!data)
+            {   //No data exists so download it now.
+                app.initializeData();
+                return;
             }
-            else
+           
+            //Data exists so use it when it is up to date.
+            fs.getFileContents(app.remote + app.api_pagesum, function(checksumdata)
             {
-                fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.utilizeDownloadResult);
-            }
+                if(checksumdata && checksumdata.data == data.sum)
+                {
+                    app.utilizeData(data);
+                }
+                else
+                {
+                    app.initializeData();
+                }
+            });
         });
+    },
+    initializeData: function()
+    {
+        fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.utilizeDownloadResult);
     },
     utilizeDownloadResult: function(filename)
     {
