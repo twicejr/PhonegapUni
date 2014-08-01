@@ -1,15 +1,3 @@
-if (typeof console  != "undefined") 
-    if (typeof console.log != 'undefined')
-        console.olog = console.log;
-    else
-        console.olog = function() {};
-
-console.log = function(message) {
-    console.olog(message);
-    $('.app').append('<p>' + message + '</p>');
-};
-console.error = console.debug = console.info = console.log;
-
 var app =
 {
     ready: false,
@@ -23,42 +11,43 @@ var app =
     cacheFile: 'pages.json', //temptest
     initialize: function()
     {
-        this.bindEvents();
+        app.bindEvents();
     },
     bindEvents: function()
     {
         // Possible events: deviceready    pause    resume    backbutton    menubutton    searchbutton    startcallbutton    endcallbutton    volumedownbutton    volumeupbutton
-        document.addEventListener('deviceready', this.initialized, false);
+        document.addEventListener('deviceready', app.initialized, false);
+        
+        //@see www/config.xml also!!
+        // org.apache.cordova.network-information: online offline
+        document.addEventListener('online', app.onOnline, false);
+        document.addEventListener('offline', app.onOffline, false);
+        document.addEventListener('offlineswitch', app.offlineSwitch, false);
+        document.addEventListener('onlineswitch', app.whenReady, false);
+        document.addEventListener("resume", app.whenReady, false);
+        // org.apache.cordova.battery-status: batterycritical    batterylow    batterystatus
+        
     },
     initialized: function()
     {
         console.log('Device ready!');
         
-        //@see www/config.xml also!!
-        // org.apache.cordova.network-information: online offline
-        document.addEventListener('online', this.onOnline, false);
-        document.addEventListener('offline', this.onOffline, false);
-        document.addEventListener('offlineswitch', this.offlineSwitch, false);
-        document.addEventListener('onlineswitch', this.whenReady, false);
-        document.addEventListener("resume", this.whenReady, false);
-        // org.apache.cordova.battery-status: batterycritical    batterylow    batterystatus
-        
         navigator.globalization.getLocaleName
         (
-            function (locale) {this.lang = locale.value;},
+            function (locale) {app.lang = locale.value;},
             function () {console.log('Language could not be detected!');}
         );
 
-        this.ready = true;
-        this.whenReady();
+        app.ready = true;
+        app.whenReady();
     },
     onOffline: function()
     {
-        if (this.state_online === false)
+        if (app.state_online === false)
         {
             return;
         }
-        this.state_online = false;
+        app.state_online = false;
         var e = document.createEvent('Events');
         e.initEvent("offlineswitch");
         document.dispatchEvent(e);
@@ -66,12 +55,12 @@ var app =
     onOnline: function()
     {
         console.log('We went online.');
-        if (this.state_online === true)
+        if (app.state_online === true)
         {
             console.log('..but we already were online and should have synced.');
             return;
         }
-        this.state_online = true;
+        app.state_online = true;
         var e = document.createEvent('Events');
         e.initEvent("onlineswitch");
         document.dispatchEvent(e);
@@ -82,46 +71,36 @@ var app =
     },
     whenReady: function()
     {
-        if(!this.ready)
+        if(app.ready)
         {
-            return;
+            fs.prepare(app.fsReady);
         }
-        
-        fs.prepare(this.fsReady);
     },
     fsReady: function()
     {
-        fs.download(this.remote + api_page, this.folder + '/' + this.cacheFile, this.downloadedCache);
+        if(app.state_online)
+        {
+            fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.downloadResult);
+        }
+        else
+        {
+            console.log('We are offline');
+        }
     },
-    downloadedCache: function(filename)
+    downloadResult: function(filename)
     {
-        console.log(filename);
+        if(!filename)
+        {
+            console.log('Fubar');
+            return;
+        }
     },
     utilizeFile: function(file_url)
     {
-        this.download(file_url, function(data)
+        fs.getFileContents(file_url, function(data)
         {
-             this.utilizeData(data.data);
+             app.utilizeData(data.data);
         });
-    },
-    download: function(file_url, successFunction)
-    {
-        var parameters = {lang: this.lang};
-        console.log('Download file ' + file_url);
-        $.ajax
-        ({
-            url: file_url,
-            data: parameters,
-            dataType: 'json',
-            type: 'GET',
-            error: function(xhr,error,code) 
-            {
-                console.log(xhr);
-                console.log(error);
-                console.log(code);
-            },
-            success: successFunction
-        });  
     },
     utilizeData: function(data)
     {

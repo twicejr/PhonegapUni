@@ -6,74 +6,94 @@ var fs =
     _fileSystem: null, 
     _tempStoreCallback: null,
     root: null,
-    type: LocalFileSystem.PERSISTENT,
+    type: null,
     prepare: function(callback)
     {
-        this._init(callback);
+        fs._init(callback);
     },
-    download: function(remote_file, local_file, callback)
+    download: function(remote_file, local_file, local_folder, callback)
     {
-        var fileTransfer = new FileTransfer();
-        fileTransfer.download
-        (
-            remote_file,
-            local_file,
-            function(entry)
+        var local_filepath = fs.root + local_folder + '/' + local_file;
+        console.log(local_filepath);
+        this._fileSystem.root.getDirectory(local_folder, {create: true, exclusive: false}, function()
+        {
+            var fileTransfer = new FileTransfer();
+            fileTransfer.download
+            (
+                remote_file,
+                local_filepath,
+                function(entry)
+                {
+                    callback(entry.toURL());
+                },
+                function(error)
+                {
+                    fs.error(error);
+                    callback(false);
+                }
+            );
+        }, fs.error);
+    },
+    getFileContents: function(file_url, callback)
+    {
+        console.log('Download file ' + file_url);
+        $.ajax
+        ({
+            url: file_url,
+            dataType: 'json',
+            type: 'GET',
+            error: function(xhr,error,code) 
             {
-                callback(entry.toURL());
+                console.log('Error:');
+                console.log(xhr);
+                console.log(error);
+                console.log(code);
             },
-            this._error
-        );
+            success: function(data)
+            {
+                callback(data);
+            }
+        });
     },
-    _init: function(callback)
+    _init: function(callback, type)
     {
-        this._tempStoreCallback = callback;
-        if(this.root)
+        fs.type = type ? type : LocalFileSystem.PERSISTENT;
+        fs._tempStoreCallback = callback;
+        if(fs.root)
         {
             return; //Already initialized.
         }
         
         //Request the filesystem.
-        window.requestFileSystem
-        (
-            this.type, 0, this._requestFsSuccess(fileSystem), this._error(fileError)
-        );
+        window.requestFileSystem(fs.type, 0, fs._requestFsSuccess, fs.error);
     },
     _requestFsSuccess: function(fileSystem)
     {
-        this._fileSystem = fileSystem;
-        this.root = this._fileSystem.root.toNativeURL();
-        console.log('Filesystem successfully initialized on: ' + fileSystem.name + '. Root: ' + this.root);
+        fs._fileSystem = fileSystem;
+        fs.root = fs._fileSystem.root.toURL();
+        console.log('Filesystem successfully initialized on: ' + fs.root);
         
-        if(this._tempStoreCallback)
+        if(fs._tempStoreCallback)
         {
-            this._tempStoreCallback(this._fileSystem);
+            fs._tempStoreCallback(fs._fileSystem);
         }
     },
-    _error: function(fileError)
+    error: function(error)
     {
-        var msg = '';
-        switch (e.code)
+        if (typeof error == 'object') 
         {
-            case FileError.QUOTA_EXCEEDED_ERR:
-                msg = 'QUOTA_EXCEEDED_ERR';
-                break;
-            case FileError.NOT_FOUND_ERR:
-                msg = 'NOT_FOUND_ERR';
-                break;
-            case FileError.SECURITY_ERR:
-                msg = 'SECURITY_ERR';
-                break;
-            case FileError.INVALID_MODIFICATION_ERR:
-                msg = 'INVALID_MODIFICATION_ERR';
-                break;
-            case FileError.INVALID_STATE_ERR:
-                msg = 'INVALID_STATE_ERR';
-                break;
-            default:
-                msg = 'Unknown Error';
-                break;
-        };
-        console.log('Fs error: ' + msg);
+            error = JSON.stringify(error);
+        }
+        error = '\nLOG: ' + error;
+        var stacktrace = '';
+        if (window.printStackTrace)
+        {
+            try 
+            {
+              stacktrace = '\n -' + printStackTrace().slice(4).join('\n -');
+              error += '\nSTACKTRACE:' + stacktrace;
+              console.log(error);
+            } catch(e) {}
+        }
     }
 };
