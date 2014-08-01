@@ -147,7 +147,7 @@ var app =
         $('a[href=' + activePage + ']').addClass('ui-btn-active');
         $.mobile.changePage(activePage);
         
-        $('[data-role=page]').live('pageshow', function()
+        $('[data-role=page]').on('pageshow', function()
         {
             if (window.location.hash != '')
             {
