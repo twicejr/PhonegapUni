@@ -25,8 +25,6 @@ var app =
         document.addEventListener('offlineswitch', app.offlineSwitch, false);
         document.addEventListener('onlineswitch', app.whenReady, false);
         document.addEventListener("resume", app.whenReady, false);
-        // org.apache.cordova.battery-status: batterycritical    batterylow    batterystatus
-        
     },
     initialized: function()
     {
@@ -146,7 +144,21 @@ var app =
         }
         
         $('.app').removeClass('initializing');
+        $('a[href=' + activePage + ']').addClass('ui-btn-active');
         $.mobile.changePage(activePage);
+        
+        $('[data-role=page]').live('pageshow', function()
+        {
+            if (window.location.hash != '')
+            {
+                $('a.ui-btn').removeClass('ui-btn-active');
+                $('a.ui-btn[href="' + window.location.hash + '"]').addClass('ui-btn-active').addClass('ui-state-persist');
+            }
+        });
+        
+        $('.logo').live('vclick', function() {
+          $('#navbar a').removeClass('ui-btn-active');
+        });
         
         app.done = true; //All is loaded. Nothing needs to be loaded anymore.
     }
