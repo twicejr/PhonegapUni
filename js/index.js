@@ -152,7 +152,7 @@ var app =
             if (window.location.hash != '')
             {
                 $('a.ui-btn').removeClass('ui-btn-active');
-                $('a.ui-btn[href="' + window.location.hash + '"]').addClass('ui-btn-active').addClass('ui-state-persist');
+                $('a.ui-btn[href="' + window.location.hash + '"]').addClass('ui-btn-active');
             }
         });
         
