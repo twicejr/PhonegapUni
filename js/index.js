@@ -126,7 +126,7 @@ var app =
     utilizeData: function(data)
     {
         var dataset = data.data;
-        if(dataset.css)
+        if(typeof dataset.css !== null && dataset.css)
         {
             $('#style_remote').remove();
             $('head').append('<style type="text/css" id="style_remote">' + dataset.css + '</style>');
@@ -144,18 +144,14 @@ var app =
         }
         
         $('.app').removeClass('initializing');
-        $('a[href=' + activePage + ']').addClass('ui-btn-active');
         $.mobile.changePage(activePage);
-        /*
-        $('a.ui-btn').on('vclick', function()
-        {
-            if (window.location.hash != '')
-            {
-                $('a.ui-btn').removeClass('ui-btn-active');
-                $('a.ui-btn[href="' + window.location.hash + '"]').addClass('ui-btn-active');
-            }
-        });
-        */
+        
+        $( "[data-role='footer']" ).toolbar();
+        
+          //  $('a.ui-btn').removeClass('ui-btn-active').removeClass('ui-state-persist');
+          //  $('a.ui-btn[href="' + $(this).attr('href') + '"]').addClass('ui-btn-active').addClass('ui-state-persist');
+      
+        
         
         app.done = true; //All is loaded. Nothing needs to be loaded anymore.
     }
