@@ -157,7 +157,7 @@ img{
 }
 .ui-listview > li.ui-li-has-thumb p
 {
-    width: calc(100% - 6em);
+    width: calc(100% - 5.5em);
 }
 
 .ui-listview > .ui-li-has-thumb > .ui-btn, .ui-listview > .ui-li-static.ui-li-has-thumb
