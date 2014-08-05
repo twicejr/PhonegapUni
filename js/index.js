@@ -145,12 +145,9 @@ var app =
         
         $('.app').removeClass('initializing');
         $.mobile.changePage(activePage);
+        $('a.ui-btn[href=' + activePage).addClass('ui-btn-active');
         
         $( "[data-role='footer']" ).toolbar();
-        
-          //  $('a.ui-btn').removeClass('ui-btn-active').removeClass('ui-state-persist');
-          //  $('a.ui-btn[href="' + $(this).attr('href') + '"]').addClass('ui-btn-active').addClass('ui-state-persist');
-      
         
         
         app.done = true; //All is loaded. Nothing needs to be loaded anymore.
