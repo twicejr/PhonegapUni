@@ -7,6 +7,9 @@
     <author email="info@visiecom.com" href="http://visiecom.com/">
         VisieCom B.V.
     </author>
+    <feature name="InAppBrowser">
+        <param name="ios-package" value="CDVInAppBrowser" />
+    </feature>
     <preference name="permissions" value="none" />
     <preference name="phonegap-version" value="3.5.0" />
     <preference name="orientation" value="default" />
