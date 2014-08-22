@@ -33,8 +33,16 @@ var app =
         
         $('body').on('click', 'a.external', function()
         {
-            alert('gotcha?');
-            window.open(url, '_system',  'location=yes');
+            e.stopPropagation();
+            var url = $(this).attr('href');
+            if(device.platform === 'Android') 
+            {
+                navigator.app.loadUrl(url, {openExternal:true});
+            }
+            else 
+            {
+                window.open(url, '_system',  'location=yes');
+            }
             return false;
         });
         
