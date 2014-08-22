@@ -35,12 +35,14 @@ var app =
         {
             e.stopPropagation();
             var url = $(this).attr('href');
-            if(device.platform === 'Android') 
+            if(device.platform === 'Android')
             {
+                console.log(1);
                 navigator.app.loadUrl(url, {openExternal:true});
             }
             else 
             {
+                console.log(2);
                 window.open(url, '_system',  'location=yes');
             }
             return false;
