@@ -31,17 +31,10 @@ var app =
         console.log('Device ready!');
         app.ready = true;
         
-        $('a.external').click(function()
+        $('a.external').click(function(e)
         {
-            var url = $(this).attr('href');
-            if(device.platform === 'Android') 
-            {
-                navigator.app.loadUrl(url, {openExternal:true});
-            }
-            else 
-            {
-                window.open(url, '_blank');
-            }
+            alert('gotcha?');
+            window.open(url, '_system',  'location=yes');
             return false;
         });
         
