@@ -30,6 +30,21 @@ var app =
     {
         console.log('Device ready!');
         app.ready = true;
+        
+        $('a.external').click(function()
+        {
+            var url = $(this).attr('href');
+            if(device.platform === 'Android') 
+            {
+                navigator.app.loadUrl(url, {openExternal:true});
+            }
+            else 
+            {
+                window.open(url, '_system');
+            }
+            return false;
+        });
+        
         navigator.globalization.getLocaleName
         (
             function (locale) 
