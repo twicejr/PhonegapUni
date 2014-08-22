@@ -41,7 +41,7 @@ var app =
             }
             else 
             {
-                window.open(url, '_system',  'location=yes');
+                window.open(url, '_blank');
             }
             return false;
         });
