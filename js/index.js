@@ -33,16 +33,15 @@ var app =
         
         $('body').on('click', 'a.external', function()
         {
-            e.stopPropagation();
             var url = $(this).attr('href');
             if(device.platform === 'Android')
             {
-                console.log(1);
+                console.log('External link opened');
                 navigator.app.loadUrl(url, {openExternal:true});
             }
             else 
             {
-                console.log(2);
+                console.log('External link opened');
                 window.open(url, '_system',  'location=yes');
             }
             return false;
