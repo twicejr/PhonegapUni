@@ -41,7 +41,7 @@ var app =
             }
             else 
             {
-                console.log('External link opened');
+                console.log('External link opened on iphone');
                 window.open(url, '_system',  'location=yes');
             }
             return false;
