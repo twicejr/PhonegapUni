@@ -31,9 +31,8 @@ var app =
         console.log('Device ready!');
         app.ready = true;
         
-        $('a.external').click(function(e)
+        $('a.external').click(function()
         {
-            e.stopPropagation();
             var url = $(this).attr('href');
             if(device.platform === 'Android') 
             {
