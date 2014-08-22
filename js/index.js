@@ -31,9 +31,8 @@ var app =
         console.log('Device ready!');
         app.ready = true;
         
-        $('a.external').click(function(e)
+        $('body').on('click', 'a.external', function()
         {
-            alert('gotcha?');
             window.open(url, '_system',  'location=yes');
             return false;
         });
