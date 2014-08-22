@@ -31,8 +31,9 @@ var app =
         console.log('Device ready!');
         app.ready = true;
         
-        $('a.external').click(function()
+        $('a.external').click(function(e)
         {
+            e.stopPropagation();
             var url = $(this).attr('href');
             if(device.platform === 'Android') 
             {
@@ -40,7 +41,7 @@ var app =
             }
             else 
             {
-                window.open(url, '_system');
+                window.open(url, '_system',  'location=yes');
             }
             return false;
         });
