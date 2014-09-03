@@ -6,6 +6,6 @@ if (typeof console  != "undefined")
 
 console.log = function(message) {
     console.olog(message);
-    alert(message);
+    $('.app').prepend('<p>' + message + '</p>');
 };
 console.error = console.debug = console.info = console.log;
