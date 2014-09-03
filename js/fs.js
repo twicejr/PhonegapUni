@@ -48,7 +48,7 @@ var fs =
             type: 'GET',
             error: function(xhr,error,code) 
             {
-                console.log('...error: ' + code + ', :' + error);
+                console.log('...error: ' + error + ', :' + code);
                 callback(false);
             },
             success: function(data)
