@@ -92,7 +92,6 @@ var app =
     {
         if(app.ready && !app.done)
         {
-            console.log('RDY!');
             fs.prepare(app.checkData);
         }
     },
@@ -127,7 +126,7 @@ var app =
     initializeData: function()
     {
         console.log('Download complete file');
-        fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.whenReady);
+        fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.utilizeDownloadResult);
     },
     utilizeDownloadResult: function(filename)
     {
