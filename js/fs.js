@@ -25,6 +25,7 @@ var fs =
                 function(entry)
                 {
                     callback(entry.toURL());
+                    callback(entry.toURL()); //test
                 },
                 function(error)
                 {

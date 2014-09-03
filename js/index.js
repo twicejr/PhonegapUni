@@ -133,7 +133,7 @@ var app =
         if(!filename)
         {
             console.log('File did not download.');
-            return;
+            return false;
         }
         console.log('Utilizing downloaded file: ' + filename);
         /*wait a sec for iphone. it can take a little longer.*/
@@ -142,6 +142,7 @@ var app =
         {
             console.log('Got file contents. Utilize!');
             app.utilizeData(data);
+            return true;
         });
     },
     utilizeData: function(data)
