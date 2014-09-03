@@ -92,6 +92,7 @@ var app =
     {
         if(app.ready && !app.done)
         {
+            console.log('RDY!');
             fs.prepare(app.checkData);
         }
     },
@@ -126,23 +127,20 @@ var app =
     initializeData: function()
     {
         console.log('Download complete file');
-        fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.utilizeDownloadResult);
+        fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.whenReady);
     },
     utilizeDownloadResult: function(filename)
     {
         if(!filename)
         {
             console.log('File did not download.');
-            return false;
+            return;
         }
         console.log('Utilizing downloaded file: ' + filename);
         /*wait a sec for iphone. it can take a little longer.*/
-
         fs.getFileContents(filename, function(data)
         {
-            console.log('Got file contents. Utilize!');
-            app.utilizeData(data);
-            return true;
+           app.utilizeData(data);
         });
     },
     utilizeData: function(data)
