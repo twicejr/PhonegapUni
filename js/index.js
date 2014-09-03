@@ -125,6 +125,7 @@ var app =
     },
     initializeData: function()
     {
+        console.log('Download complete file');
         fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.utilizeDownloadResult);
     },
     utilizeDownloadResult: function(filename)
@@ -142,6 +143,7 @@ var app =
     },
     utilizeData: function(data)
     {
+        console.log('Utilize data!');
         var dataset = data.data;
         if(typeof dataset.css !== null && dataset.css)
         {
