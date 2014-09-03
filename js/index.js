@@ -138,14 +138,20 @@ var app =
         console.log('Utilizing downloaded file: ' + filename);
         fs.getFileContents(filename, function(data)
         {
-            app.utilizeData(data); //the actual dataset.
+            /*wait a sec for iphone.*/
+            setTimeout(1000, function(){ app.utilizeData(data);});
         });
     },
     utilizeData: function(data)
     {
         console.log('Utilize data!');
+        if(data == undefined || data.data == undefined)
+        {
+            console.log('undefined');
+            return;
+        }
         var dataset = data.data;
-        console.log(dataset);
+        
         if(typeof dataset.css !== null && dataset.css)
         {
             $('#style_remote').remove();
@@ -154,8 +160,6 @@ var app =
         $('body').html(dataset.pagedata);
         
         var activePage = $.mobile.activePage.attr("id");
-        
-        alert(activePage);
         if(activePage)
         {
             activePage = '#' + activePage;
