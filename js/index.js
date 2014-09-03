@@ -136,10 +136,13 @@ var app =
             return;
         }
         console.log('Utilizing downloaded file: ' + filename);
-        fs.getFileContents(filename, function(data)
-        {
-            /*wait a sec for iphone.*/
-            setTimeout(1000, function(){ app.utilizeData(data);});
+        /*wait a sec for iphone. it can take a little longer.*/
+        setTimeout(1000,  function()
+        { 
+            fs.getFileContents(filename, function(data)
+            {
+               app.utilizeData(data);
+            });
         });
     },
     utilizeData: function(data)
