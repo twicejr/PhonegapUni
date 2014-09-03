@@ -144,18 +144,14 @@ var app =
     utilizeData: function(data)
     {
         console.log('Utilize data!');
-        alert(1);
         var dataset = data.data;
-        alert(2);
+        console.log(dataset);
         if(typeof dataset.css !== null && dataset.css)
         {
-            alert(3);
             $('#style_remote').remove();
             $('head').append('<style type="text/css" id="style_remote">' + dataset.css + '</style>');
         }
-        alert(4);
         $('body').html(dataset.pagedata);
-        alert(5);
         
         var activePage = $.mobile.activePage.attr("id");
         
@@ -174,7 +170,6 @@ var app =
         $.mobile.changePage(activePage);
     //    $('a.ui-btn[href=' + activePage + ']').addClass('ui-btn-active');
         
-        alert(6);
         
         
         app.done = true; //All is loaded. Nothing needs to be loaded anymore.
