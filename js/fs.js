@@ -24,8 +24,8 @@ var fs =
                 local_filepath,
                 function(entry)
                 {
+                    console.log('Downloaded file to ' + entry.toURL());
                     callback(entry.toURL());
-                    callback(entry.toURL()); //test
                 },
                 function(error)
                 {
