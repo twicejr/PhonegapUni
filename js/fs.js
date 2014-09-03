@@ -40,7 +40,7 @@ var fs =
     },
     getFileContents: function(file_url, callback)
     {
-        console.log('Get file contents: ' + file_url);
+        console.log('Try to get file contents: ' + file_url + '...');
         $.ajax
         ({
             url: file_url,
@@ -48,10 +48,12 @@ var fs =
             type: 'GET',
             error: function(xhr,error,code) 
             {
+                console.log('...error: ' + code + ', :' + error);
                 callback(false);
             },
             success: function(data)
             {
+                console.log('...succes!');
                 callback(data);
             }
         });
