@@ -104,7 +104,7 @@ var app =
         {
             if(!data)
             {   //No data exists so download it now.
-                app.initializeData();
+                app.initialFetch();
                 return;
             }
            
@@ -118,12 +118,12 @@ var app =
                 }
                 else
                 {
-                    app.initializeData();
+                    app.initialFetch();
                 }
             });
         });
     },
-    initializeData: function()
+    initialFetch: function()
     {
         console.log('Download complete file');
         fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.utilizeDownloadResult);
@@ -136,11 +136,14 @@ var app =
             return;
         }
         console.log('Utilizing downloaded file: ' + filename);
-        /*wait a sec for iphone. it can take a little longer.*/
+        console.log('..1');
         fs.getFileContents(filename, function(data)
         {
-           app.utilizeData(data);
+            console.log('..3');
+            app.utilizeData(data);
         });
+        
+        console.log('..2');
     },
     utilizeData: function(data)
     {
