@@ -144,6 +144,10 @@ var app =
                 console.log('..3');
                 app.utilizeData(data);
             }
+            else
+            {
+                console.log(filename + ' failed.');
+            }
         });
         
         console.log('..2');
