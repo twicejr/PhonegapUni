@@ -147,7 +147,7 @@ var app =
             }
             else
             {
-                location.reload(); //try it.
+                fs.prepare(app.checkData); //re init fs iphone
             }
         });
         
