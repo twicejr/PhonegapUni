@@ -148,8 +148,23 @@ var app =
             else
             {
                 console.log(filename + ' failed.');
+                
+                console.log('try again...')
+                fs.getFileContents(filename, function(data)
+                {
+                    if(data && data.data)
+                    {
+                        console.log('..utilize success.');
+                        app.utilizeData(data);
+                    }
+                    else
+                    {
+                        console.log(filename + ' failed.');
+                    }
+                });
             }
         });
+        
     },
     utilizeData: function(data)
     {
