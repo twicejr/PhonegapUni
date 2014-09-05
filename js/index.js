@@ -128,8 +128,10 @@ var app =
         console.log('Initial fetch');
         fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.utilizeDownloadResult);
     },
-    utilizeDownloadResult: function(filename)
+    utilizeDownloadResult: function(fileEntry)
     {
+        console.log(fileEntry);
+        var filename = fileEntry.toURL();
         if(!filename)
         {
             console.log('File did not download.');

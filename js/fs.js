@@ -25,7 +25,7 @@ var fs =
                 function(entry)
                 {
                     console.log('Download OK.');
-                    callback(entry.toURL());
+                    callback(entry);
                 },
                 function(error)
                 {
