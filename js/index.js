@@ -131,28 +131,23 @@ var app =
     utilizeDownloadResult: function(fileEntry)
     {
         console.log(fileEntry);
+        var reader = new FileReader();
+        fileEntry.file(function(file) 
+        {
+            reader.onloadend = function(e) 
+            {
+                console.log('Utilizing downloaded file: ' + filename);
+                app.utilizeData(this.result);
+            };
+            reader.readAsText(file);
+         }, errorHandler);
+
         var filename = fileEntry.toURL();
         if(!filename)
         {
             console.log('File did not download.');
             return;
         }
-        
-        console.log('Utilizing downloaded file: ' + filename);
-        
-        fs.getLocalFileContents(filename, function(data)
-        {
-            if(data && data.data)
-            {
-                console.log('..utilize success.');
-                app.utilizeData(data);
-            }
-            else
-            {
-                console.log(filename + ' failed.');
-            }
-        });
-        
     },
     utilizeData: function(data)
     {
