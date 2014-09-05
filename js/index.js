@@ -130,7 +130,7 @@ var app =
     },
     utilizeDownloadResult: function(fileEntry)
     {
-        //Use filereader because iPhone fails on local ajax request initially...
+        //Use filereader because iPhone fails on local ajax request initially... and it is probably more efficient.
         var reader = new FileReader();
         fileEntry.file(function(file) 
         {
