@@ -130,17 +130,17 @@ var app =
     },
     utilizeDownloadResult: function(fileEntry)
     {
-        console.log(fileEntry);
+        //Use filereader because iPhone fails on local ajax request initially...
         var reader = new FileReader();
         fileEntry.file(function(file) 
         {
             reader.onloadend = function(e) 
             {
                 console.log('Utilizing downloaded file: ' + filename);
-                app.utilizeData(this.result);
+                app.utilizeData(JSON.parse(this.result));//.target.
             };
             reader.readAsText(file);
-         }, function(e){console.log('download failed.'); console.log(e);});
+         }, function(e){});
 
         var filename = fileEntry.toURL();
         if(!filename)
@@ -152,23 +152,6 @@ var app =
     utilizeData: function(data)
     {
         console.log('Utilize data!');
-        if(data == undefined || data.data == undefined)
-        {
-            console.log('who triggered this function??');
-            error = '\nLOG: ' + error;
-            var stacktrace = '';
-            if (window.printStackTrace)
-            {
-                try 
-                {
-                  stacktrace = '\n -' + printStackTrace().slice(4).join('\n -');
-                  error += '\nSTACKTRACE:' + stacktrace;
-                  console.log(error);
-                } catch(e) {}
-            }
-
-            return;
-        }
         var dataset = data.data;
         
         if(typeof dataset.css !== null && dataset.css)
