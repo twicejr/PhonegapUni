@@ -137,7 +137,7 @@ var app =
         }
         console.log('Utilizing downloaded file: ' + filename);
         console.log('..1');
-        fs.getFileContents(filename, function(data)
+        fs.localFileContents(filename, function(data)
         {
             if(data)
             {

@@ -60,6 +60,17 @@ var fs =
             }
         });
     },
+    localFileContents: function(file, callback)
+    {
+        var reader = new FileReader();
+        var result;
+        reader.readAsText(file);
+        reader.onload = function()
+        { 
+            result = reader.result;
+            callback(result);
+        };
+    },
     _init: function(callback, type)
     {
         if(fs.root)
