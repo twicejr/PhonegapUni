@@ -98,7 +98,6 @@ var app =
     checkData: function()
     {
         var cachefile_location = fs.buildFileUrl(app.folder + '/' + app.cacheFile);
-        console.log(cachefile_location);
         
         //Check if file exists.
         fs.getFileContents(cachefile_location, function(data)
@@ -126,7 +125,7 @@ var app =
     },
     initialFetch: function()
     {
-        console.log('Download complete file');
+        console.log('Initial fetch');
         fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.utilizeDownloadResult);
     },
     utilizeDownloadResult: function(filename)
@@ -136,13 +135,14 @@ var app =
             console.log('File did not download.');
             return;
         }
+        
         console.log('Utilizing downloaded file: ' + filename);
-        console.log('..1');
+        
         fs.getFileContents(filename, function(data)
         {
             if(data)
             {
-                console.log('..3');
+                console.log('..utilize success.');
                 app.utilizeData(data);
             }
             else
@@ -150,15 +150,25 @@ var app =
                 console.log(filename + ' failed.');
             }
         });
-        
-        console.log('..2');
     },
     utilizeData: function(data)
     {
         console.log('Utilize data!');
         if(data == undefined || data.data == undefined)
         {
-            console.log('undefined');
+            console.log('who triggered this function??');
+            error = '\nLOG: ' + error;
+            var stacktrace = '';
+            if (window.printStackTrace)
+            {
+                try 
+                {
+                  stacktrace = '\n -' + printStackTrace().slice(4).join('\n -');
+                  error += '\nSTACKTRACE:' + stacktrace;
+                  console.log(error);
+                } catch(e) {}
+            }
+
             return;
         }
         var dataset = data.data;
