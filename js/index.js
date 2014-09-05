@@ -139,8 +139,11 @@ var app =
         console.log('..1');
         fs.getFileContents(filename, function(data)
         {
-            console.log('..3');
-            app.utilizeData(data);
+            if(data)
+            {
+                console.log('..3');
+                app.utilizeData(data);
+            }
         });
         
         console.log('..2');
