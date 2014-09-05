@@ -98,9 +98,10 @@ var app =
     checkData: function()
     {
         var cachefile_location = fs.buildFileUrl(app.folder + '/' + app.cacheFile);
-
+        console.log(cachefile_location);
+        
         //Check if file exists.
-        fs.localFileContents(cachefile_location, function(data)
+        fs.getFileContents(cachefile_location, function(data)
         {
             if(!data)
             {   //No data exists so download it now.
@@ -137,7 +138,7 @@ var app =
         }
         console.log('Utilizing downloaded file: ' + filename);
         console.log('..1');
-        fs.localFileContents(filename, function(data)
+        fs.getFileContents(filename, function(data)
         {
             if(data)
             {
