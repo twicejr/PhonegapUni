@@ -100,7 +100,7 @@ var app =
         var cachefile_location = fs.buildFileUrl(app.folder + '/' + app.cacheFile);
 
         //Check if file exists.
-        fs.getFileContents(cachefile_location, function(data)
+        fs.localFileContents(cachefile_location, function(data)
         {
             if(!data)
             {   //No data exists so download it now.
