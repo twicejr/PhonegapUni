@@ -25,13 +25,10 @@ var fs =
                 function(entry)
                 {
                     console.log('Download OK.');
-                    console.log(entry);
                     callback(entry.toURL());
                 },
                 function(error)
                 {
-                    alert('fu');
-                    console.log('fu');
                     fs.error(error);
                     callback(false);
                 }
