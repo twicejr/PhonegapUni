@@ -102,7 +102,7 @@ var app =
         //Check if file exists.
         fs.getFileContents(cachefile_location, function(data)
         {
-            if(!data)
+            if(!data || !data.data)
             {   //No data exists so download it now.
                 app.initialFetch();
                 return;
@@ -140,7 +140,7 @@ var app =
         
         fs.getFileContents(filename, function(data)
         {
-            if(data)
+            if(data && data.data)
             {
                 console.log('..utilize success.');
                 app.utilizeData(data);
