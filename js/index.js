@@ -147,7 +147,7 @@ var app =
             }
             else
             {
-                fs.prepare(app.checkData); //re init fs iphone
+                console.log(filename + ' failed.');
             }
         });
         
