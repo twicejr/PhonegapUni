@@ -39,6 +39,15 @@ var fs =
     {
         return fs.root + relative_url;
     },
+    getLocalFileContents: function(file, callback)
+    {
+        var reader = new FileReader(); 
+        reader.onloadend = function(evt) 
+        { 
+            callback(evt.target.result);
+        }; 
+        reader.readAsText(file);
+    },
     getFileContents: function(file_url, callback)
     {
         console.log('Try to get file contents: ' + file_url + '...');

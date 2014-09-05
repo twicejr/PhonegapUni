@@ -138,7 +138,7 @@ var app =
         
         console.log('Utilizing downloaded file: ' + filename);
         
-        fs.getFileContents(filename, function(data)
+        fs.getLocalFileContents(filename, function(data)
         {
             if(data && data.data)
             {
