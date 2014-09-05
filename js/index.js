@@ -140,7 +140,7 @@ var app =
                 app.utilizeData(this.result);
             };
             reader.readAsText(file);
-         }, errorHandler);
+         }, function(e){console.log('download failed.'); console.log(e);});
 
         var filename = fileEntry.toURL();
         if(!filename)
