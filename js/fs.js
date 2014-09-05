@@ -30,6 +30,8 @@ var fs =
                 },
                 function(error)
                 {
+                    alert('fu');
+                    console.log('fu');
                     fs.error(error);
                     callback(false);
                 }

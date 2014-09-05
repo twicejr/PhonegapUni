@@ -149,7 +149,7 @@ var app =
             {
                 console.log(filename + ' failed.');
                 
-                console.log('try again...')
+                console.log('try again...');
                 fs.getFileContents(filename, function(data)
                 {
                     if(data && data.data)
