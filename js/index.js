@@ -176,8 +176,6 @@ var app =
         $.mobile.changePage(activePage);
     //    $('a.ui-btn[href=' + activePage + ']').addClass('ui-btn-active');
         
-        
-        
         app.done = true; //All is loaded. Nothing needs to be loaded anymore.
     }
 };
