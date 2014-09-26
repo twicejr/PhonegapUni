@@ -4,7 +4,7 @@ var app =
     ready: false,
     lang: 'nl',
     state_online: null,
-    remote: 'http://test.visietest.nl/zppc/', //@todo: change it to the appropriate.
+    remote: 'http://zppc.nl/appserver/api.php/', //note: because of parent folder htaccess, just use api.php. (which is renamed from index.php also to prevent htaccess conflicts without much work)
     api_page: 'api/json/read/pages',
     api_pagesum: 'api/json/read/pagesum',
     folder: 'zppc',
