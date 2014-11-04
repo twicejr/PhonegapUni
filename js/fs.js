@@ -14,9 +14,9 @@ var fs =
     },
     renameFile: function(currentName, currentDir, newName, successFunction)
     {
-        fileSystem.root.getFile(currentDir + currentName, null, function(fileEntry) 
+        this._fileSystem.root.getFile(currentDir + currentName, null, function(fileEntry) 
         {
-            fileSystem.root.getDirectory(currentDir, {create: true}, function(dirEntry)
+            this._fileSystem.root.getDirectory(currentDir, {create: true}, function(dirEntry)
             {
                 parentEntry = new DirectoryEntry(currentName, currentDir + currentName);
 
