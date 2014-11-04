@@ -23,9 +23,9 @@ var fs =
                 fileEntry.moveTo(dirEntry, newName, function() 
                 {
                     successFunction();
-                }, renameFail);
-            }, renameFail);
-        }, renameFail);
+                }, fs.error);
+            }, fs.error);
+        }, fs.error);
     },
     download: function(remote_file, local_file, local_folder, callback)
     {
