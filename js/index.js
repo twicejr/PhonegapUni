@@ -141,7 +141,6 @@ var app =
     },
     doItNow: function(fileEntryFinal)
     {
-        alert(fileEntryFinal.toURL());
         app.fileEntryTemp = null;
         
         //Use filereader because iPhone fails on local ajax request initially... and it is probably more efficient.
