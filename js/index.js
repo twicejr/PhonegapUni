@@ -9,6 +9,7 @@ var app =
     api_pagesum: 'api/json/read/pagesum',
     folder: 'zppc',
     cacheFile: 'pages.json',
+    fileEntryTemp: false,
     initialize: function()
     {
         app.bindEvents();
@@ -127,28 +128,39 @@ var app =
     initialFetch: function()
     {
         console.log('Initial fetch');
-        fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.utilizeDownloadResult);
+        fs.download(app.remote + app.api_page, app.cacheFile + '.tmp', app.folder, app.utilizeDownloadResult);
     },
     utilizeDownloadResult: function(fileEntry)
     {
+        var root = fs.getRoot();
+        app.fileEntryTemp = fileEntry;
+        root.getDirectory(app.folder, {create: true, exlusive: false}, function(directoryEntry)
+        {
+            app.fileEntryTemp.moveTo(directoryEntry, app.cacheFile, app.doItNow);
+        });
+    },
+    doItNow: function(fileEntryFinal)
+    {
+        app.fileEntryTemp = null;
+        
         //Use filereader because iPhone fails on local ajax request initially... and it is probably more efficient.
         var reader = new FileReader();
-        fileEntry.file(function(file) 
+        fileEntryFinal.file(function(file) 
         {
             reader.onloadend = function(e) 
             {
-                console.log('Utilizing downloaded file: ' + filename);
+                console.log('Utilizing downloaded file');
                 app.utilizeData(JSON.parse(this.result));//.target.
             };
             reader.readAsText(file);
          }, function(e){});
 
-        var filename = fileEntry.toURL();
+        var filename = fileEntryFinal.toURL();
         if(!filename)
         {
             console.log('File did not download.');
             return;
-        }
+        }  
     },
     utilizeData: function(data)
     {

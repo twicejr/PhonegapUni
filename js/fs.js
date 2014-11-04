@@ -1,7 +1,6 @@
 /**
  * Filesystem wrapper class
  */
-
 var fs =
 {
     _fileSystem: null, 
@@ -12,27 +11,10 @@ var fs =
     {
         fs._init(callback);
     },
-    renameFile: function(currentName, currentDir, newName, successFunction)
-    {
-        this._fileSystem.root.getFile(currentDir + currentName, null, function(fileEntry) 
-        {
-            this._fileSystem.root.getDirectory(currentDir, {create: true}, function(dirEntry)
-            {
-                parentEntry = new DirectoryEntry(currentName, currentDir + currentName);
-
-                fileEntry.moveTo(dirEntry, newName, function() 
-                {
-                    successFunction();
-                }, fs.error);
-            }, fs.error);
-        }, fs.error);
-    },
     download: function(remote_file, local_file, local_folder, callback)
     {
-        var local_file_final = local_file;
-        local_file = local_file + '.temp';
         var local_filepath = fs.root + local_folder + '/' + local_file;
-        console.log('Downloading file: ' + remote_file + ' to local: ' + local_file_final);
+        console.log('Downloading file: ' + remote_file + ' to local: ' + local_filepath);
         this._fileSystem.root.getDirectory(local_folder, {create: true, exclusive: false}, function()
         {
             var fileTransfer = new FileTransfer();
@@ -42,7 +24,8 @@ var fs =
                 local_filepath,
                 function(entry)
                 {
-                    fs.renameFile(local_file, local_folder, local_file_final, function(){callback(entry);});
+                    console.log('Download OK.');
+                    callback(entry);
                 },
                 function(error)
                 {
@@ -51,6 +34,10 @@ var fs =
                 }
             );
         }, fs.error);
+    },
+    getRoot: function()
+    {
+        return fs._fileSystem.root;
     },
     buildFileUrl: function(relative_url)
     {
