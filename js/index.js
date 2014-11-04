@@ -136,11 +136,12 @@ var app =
         app.fileEntryTemp = fileEntry;
         root.getDirectory(app.folder, {create: true, exlusive: false}, function(directoryEntry)
         {
-            app.fileEntryTemp.moveTo(directoryEntry, app.cacheFile, app.doItNow);
+            app.fileEntryTemp.moveTo(directoryEntry, app.cacheFile, app.doItNow, fs.error);
         });
     },
     doItNow: function(fileEntryFinal)
     {
+        alert(fileEntryFinal.toURL());
         app.fileEntryTemp = null;
         
         //Use filereader because iPhone fails on local ajax request initially... and it is probably more efficient.
