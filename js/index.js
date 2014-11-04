@@ -15,9 +15,11 @@ var app =
     },
     bindEvents: function()
     {
+        // Possible events: deviceready    pause    resume    backbutton    menubutton    searchbutton    startcallbutton    endcallbutton    volumedownbutton    volumeupbutton
         document.addEventListener('deviceready', app.initialized, false);
         
         //@see www/config.xml also!!
+        // org.apache.cordova.network-information: online offline
         document.addEventListener('online', app.onOnline, false);
         document.addEventListener('offline', app.onOffline, false);
         document.addEventListener('offlineswitch', app.offlineSwitch, false);
@@ -34,10 +36,12 @@ var app =
             var url = $(this).attr('href');
             if(device.platform === 'Android')
             {
+                console.log('External link opened');
                 navigator.app.loadUrl(url, {openExternal:true});
             }
             else 
             {
+                console.log('External link opened on iphone');
                 window.open(url, '_system',  'location=yes');
             }
             return false;
@@ -54,8 +58,7 @@ var app =
             },
             function () {console.log('Language could not be detected!');}
         );
-
-        app.whenReady(); // Lets begin
+        app.whenReady();
     },
     onOffline: function()
     {
@@ -101,8 +104,7 @@ var app =
         {
             if(!data || !data.data)
             {   //No data exists so download it now.
-                console.log('Download INITIAL because no data was found');
-                app.downloadNewData();
+                app.initialFetch();
                 return;
             }
            
@@ -110,21 +112,21 @@ var app =
             //Data exists so use it when it is up to date.
             fs.getFileContents(app.remote + app.api_pagesum, function(checksumdata)
             {
+                app.utilizeData(data);
                 if(checksumdata && checksumdata.data == checksum)
                 {
-                    console.log('Use EXISTING data');
-                    app.utilizeData(data);
+                    //app.utilizeData(data);
                 }
                 else
                 {
-                    console.log('Download NEW DATA because OLD data was found.' + checksumdata.data + ' !== ' + checksum);
-                    app.downloadNewData();
+                    app.initialFetch();
                 }
             });
         });
     },
-    downloadNewData: function()
+    initialFetch: function()
     {
+        console.log('Initial fetch');
         fs.download(app.remote + app.api_page, app.cacheFile, app.folder, app.utilizeDownloadResult);
     },
     utilizeDownloadResult: function(fileEntry)
