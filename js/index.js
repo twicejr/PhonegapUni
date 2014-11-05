@@ -16,11 +16,7 @@ var app =
     },
     bindEvents: function()
     {
-        // Possible events: deviceready    pause    resume    backbutton    menubutton    searchbutton    startcallbutton    endcallbutton    volumedownbutton    volumeupbutton
         document.addEventListener('deviceready', app.initialized, false);
-        
-        //@see www/config.xml also!!
-        // org.apache.cordova.network-information: online offline
         document.addEventListener('online', app.onOnline, false);
         document.addEventListener('offline', app.onOffline, false);
         document.addEventListener('offlineswitch', app.offlineSwitch, false);
@@ -52,7 +48,6 @@ var app =
         (
             function (locale) 
             {
-                //Add the language when it is available.
                 app.lang = locale.value;
                 app.api_page += '?lang=' + app.lang;
                 app.api_pagesum += '?lang=' + app.lang;
@@ -133,6 +128,7 @@ var app =
     utilizeDownloadResult: function(fileEntry)
     {
         var root = fs.getRoot();
+        //@todo: move logic to Fs class.
         app.fileEntryTemp = fileEntry;
         root.getDirectory(app.folder, {create: true, exlusive: false}, function(directoryEntry)
         {
@@ -143,14 +139,14 @@ var app =
     {
         app.fileEntryTemp = null;
         
-        //Use filereader because iPhone fails on local ajax request initially... and it is probably more efficient.
+        //Use filereader because iPhone fails on local ajax request initially... and it is probably a bit more efficient.
         var reader = new FileReader();
         fileEntryFinal.file(function(file) 
         {
             reader.onloadend = function(e) 
             {
                 console.log('Utilizing downloaded file');
-                app.utilizeData(JSON.parse(this.result));//.target.
+                app.utilizeData(JSON.parse(this.result));
             };
             reader.readAsText(file);
          }, function(e){});
@@ -164,7 +160,6 @@ var app =
     },
     utilizeData: function(data)
     {
-        console.log('Utilize data!');
         var dataset = data.data;
         
         if(typeof dataset.css !== null && dataset.css)
@@ -187,8 +182,7 @@ var app =
         $('.app').removeClass('initializing');
         $( "[data-role='footer']" ).toolbar();
         $.mobile.changePage(activePage);
-    //    $('a.ui-btn[href=' + activePage + ']').addClass('ui-btn-active');
         
-        app.done = true; //All is loaded. Nothing needs to be loaded anymore.
+        app.done = true; //All is loaded. We are done for now.
     }
 };
