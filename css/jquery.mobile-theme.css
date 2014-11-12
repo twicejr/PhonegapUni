@@ -344,10 +344,11 @@ html body .ui-flipswitch.ui-bar-a.ui-flipswitch-active,
 html .ui-bar-a .ui-slider-track .ui-btn-active,
 html .ui-body-a .ui-slider-track .ui-btn-active,
 html body .ui-group-theme-a .ui-slider-track .ui-btn-active,
-html body div.ui-slider-track.ui-body-a .ui-btn-active {
+html body div.ui-slider-track.ui-body-a .ui-btn-active,
+.ui-btn-active2{
 	background-color: #FFA500 /*{a-active-background-color}*/;
-	border-color: #ff8000 /*{a-active-border}*/;
-	color: #ffffff /*{a-active-color}*/;
+	color: #FFA500 !important /*{a-active-color}*/;
+	background: #FFFAF2 !important;
 }
 /* Active radio button icon */
 .ui-page-theme-a .ui-radio-on:after,
